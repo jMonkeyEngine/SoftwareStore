@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Register Success</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+			<div class="ui container">
+				<br />
+
+				<div th:if="${user == null}">
+					You shouldn't be here...
+				</div>
+
+				<div th:if="${user}">
+					<p>Welcome, <span th:text="${user.username}"></span></p>
+
+					<p>
+						Thank you for registering. An email has been sent to you containing a validation link. You must validate your email address before you
+						can create assets or write pageReviews.
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

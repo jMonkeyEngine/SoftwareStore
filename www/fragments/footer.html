@@ -1,0 +1,64 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<div th:fragment="footer">
+
+		<div class="ui inverted segment footer" style="border-radius: 0px; margin-bottom: 0px;">
+			<div class="ui container">
+				<div class="ui stackable three column grid">
+					<div class="row">
+						<div class="column">
+							<h5>Information</h5>
+
+							<div class="ui list">
+								<div class="item"><a href="/legal/terms/">Terms of Service</a></div>
+								<div class="item"><a href="/legal/cookies/">Cookies Policy</a></div>
+								<div class="item"><a href="/contact/">Contact Us</a></div>
+								<div class="item"><a href="https://trello.com/b/hkJTGlyK" target="_blank">RoadMap</a></div>
+								<div class="item"><a href="/blog/">Blog</a></div>
+							</div>
+						</div>
+						<div class="column">
+							<h5>Discover</h5>
+							<div class="ui list">
+								<div class="item"><a href="/search/?orderBy=rating">Highest Rated Software</a></div>
+								<div class="item"><a href="/search/?orderBy=created">Newest Software</a></div>
+								<div class="item"><a href="/search/?orderBy=updated">Recently Updated Software</a></div>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui list">
+
+								<div class="item">
+									<a class="ui right floated orange button" href="https://www.patreon.com/jayfella">
+										<i class="patreon icon"></i>Become a Patron
+									</a>
+								</div>
+
+								<div class="item">
+									<a class="ui right floated button" href="https://github.com/sponsors/jayfella">
+										<i class="pink heart icon"></i>Github Sponsor
+									</a>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="ui divider"></div>
+				<div th:inline="text">
+					&copy; 2019 [[${pageTitle}]]. All rights reserved. All creations copyright of the creators.
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(".dropdown").dropdown();
+		</script>
+	</div>
+</body>
+
+</html>

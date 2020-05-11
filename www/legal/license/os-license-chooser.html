@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Open Source Licenses</title>
+
+		<style>
+			.ui.toggle.checkbox input:checked ~ .coloring.red:before {
+				background: #f25f5c !important;
+			}
+			.ui.toggle.checkbox input:checked ~ .coloring.green:before {
+				background: #3fc845 !important;
+			}
+			.ui.toggle.checkbox input:checked ~ .coloring.blue:before {
+				background: #3f7fc8 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div layout:fragment="content" class="ui container">
+			<br />
+
+			<h1 class="ui dividing header">Open Source Licenses</h1>
+			<p>
+				Licenses determine what others can do with your project and play an important role on how your software will be used by individuals and
+				companies. Choose the options that suit your project from the choices below to find a license that is compatible. Hovering over an option will
+				give you additional information on what that option means.
+			</p>
+			<div class="ui icon message">
+				<i class="exclamation icon"></i>
+				<div class="content">
+					<div class="header">
+						Important Information
+					</div>
+					<p>This is not legal advice. Always consult a professional.</p>
+				</div>
+			</div>
+
+			<div>
+				<div class="ui form">
+					<div class="inline fields">
+						<label for="licenseType">What type of data do you want to license?</label>
+						<div class="field">
+							<div class="ui radio checkbox">
+								<input type="radio" name="licenseType" value="Software" checked="" tabindex="0" class="hidden" data-type="license-type" />
+								<label>Source Code</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui radio checkbox">
+								<input type="radio" name="licenseType" value="Media" tabindex="0" class="hidden" data-type="license-type" />
+								<label>Media (textures, sounds, models, fonts)</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="ui three column grid">
+				<div class="row">
+					<div class="column">
+						<table class="ui celled fluid table">
+							<thead>
+								<tr>
+									<th>
+										Permissions
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="permission : ${licensePermissions}">
+									<td>
+										<div class="ui green toggle checkbox">
+											<input type="checkbox" th:data-type="permission" th:data-name="${permission}" />
+											<label
+												class="tooltip coloring green"
+												th:text="${#strings.replace(permission.name, '_', ' ')}"
+												th:data-content="${permission.description}"
+											></label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="column">
+						<table class="ui celled fluid table">
+							<thead>
+								<tr>
+									<th>
+										Conditions
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="condition : ${licenseConditions}">
+									<td>
+										<div class="ui toggle checkbox">
+											<input type="checkbox" th:data-type="condition" th:data-name="${condition}" />
+											<label
+												class="tooltip coloring blue"
+												th:text="${#strings.replace(condition.name, '_', ' ')}"
+												th:data-content="${condition.description}"
+											></label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="column">
+						<table class="ui celled fluid table">
+							<thead>
+								<tr>
+									<th>
+										Limitations
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="limitation : ${licenseLimitations}">
+									<td>
+										<div class="ui toggle checkbox" th:id="'limitation-' + ${limitation.name}">
+											<input type="checkbox" th:data-type="limitation" th:data-name="${limitation}" />
+											<label
+												class="tooltip coloring red"
+												th:text="${#strings.replace(limitation.name, '_', ' ')}"
+												th:data-content="${limitation.description}"
+											></label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<br /><br />
+
+			<div id="licenseList">
+				<h3 class="ui dividing header">Compatible Licenses: {{ selectedLicenses.length }}</h3>
+				<p>
+					Below is a list of filtered licenses that are compatible with the selections you made. These licenses may also contain additional
+					permissions, conditions and restrictions that you did not choose. Make sure you choose a license that suits your needs.
+				</p>
+				<div v-for="(license, index) in selectedLicenses">
+					<div class="ui message">
+						<h4>
+							<a :href="license.url">{{ license.name }}</a>
+						</h4>
+
+						<p>{{ license.desc }}</p>
+
+						<div class="ui divider"></div>
+
+						<div class="ui relaxed grid">
+							<div class="three column row" style="font-size: 0.9em;">
+								<div class="column">
+									<div class="ui positive message">
+										<h4>Permissions</h4>
+										<div class="ui list" v-if="license.permissions.length > 0">
+											<a v-for="permission in license.permissions" class="item">
+												<i class="green check icon"></i>
+												<div class="content">
+													<div class="header">{{ permission.name }}</div>
+													<div class="description">{{ permission.description }}</div>
+												</div>
+											</a>
+										</div>
+										<span v-if="license.limitations.length == 0">None</span>
+									</div>
+								</div>
+								<div class="column">
+									<div class="ui info message">
+										<h4>Conditions</h4>
+										<div class="ui list" v-if="license.conditions.length > 0">
+											<a v-for="condition in license.conditions" class="item">
+												<i class="blue paperclip icon"></i>
+												<div class="content">
+													<div class="header">{{ condition.name }}</div>
+													<div class="description">{{ condition.description }}</div>
+												</div>
+											</a>
+										</div>
+										<span v-if="license.conditions.length == 0">None</span>
+									</div>
+								</div>
+								<div class="column">
+									<div class="ui negative message">
+										<h4>Limitations</h4>
+										<div class="ui list" v-if="license.limitations.length">
+											<a v-for="limitation in license.limitations" class="item">
+												<i class="red close icon"></i>
+												<div class="content">
+													<div class="header">{{ limitation.name }}</div>
+													<div class="description">{{ limitation.description }}</div>
+												</div>
+											</a>
+										</div>
+										<span v-if="license.limitations.length == 0">None</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br />
+				</div>
+			</div>
+
+			<script th:inline="javascript">
+				let getArrayIndex = function(arr, text) {
+					for (let i = 0; i < arr.length; i++) {
+						let val = arr[i];
+
+						if (val.name === text) {
+							return i;
+						}
+					}
+
+					return -1;
+				};
+
+				var updateLicenses = function() {
+					let licenses = /*[[${licenses}]]*/ "";
+					//console.log(licenses);
+
+					let allTypes = /*[[${licenseTypes}]]*/ "";
+					let allPermissions = /*[[${licensePermissions}]]*/ "";
+					let allConditions = /*[[${licenseConditions}]]*/ "";
+					let allLimitations = /*[[${licenseLimitations}]]*/ "";
+
+					let selectedType = $("*[data-type='license-type']:checked")
+						.first()
+						.attr("value");
+
+					// console.log(selectedType);
+
+					let selected_permissions = [];
+					let selected_conditions = [];
+					let selected_limitations = [];
+
+					$("*[data-type='permission']:checked").each(function(index, element) {
+						selected_permissions.push($(element).attr("data-name"));
+					});
+
+					$("*[data-type='condition']:checked").each(function(index, element) {
+						selected_conditions.push($(element).attr("data-name"));
+					});
+
+					$("*[data-type='limitation']:checked").each(function(index, element) {
+						selected_limitations.push($(element).attr("data-name"));
+					});
+
+					//console.log("Selected Properties:");
+					//console.log(selected_permissions);
+					//console.log(selected_conditions);
+					//console.log(selected_limitations);
+
+					let availableLicenses = [];
+
+					jQuery.each(licenses, function(index, value) {
+						let license = value;
+
+						if (license.licenseType !== selectedType) {
+							return true;
+						}
+
+						let permissions = license.permissions;
+						let conditions = license.conditions;
+						let limitations = license.limitations;
+
+						let checker = function(selected, arr) {
+							if (selected.length == 0) {
+								return true;
+							}
+
+							let booleans = [selected.length];
+
+							for (let i = 0; i < selected.length; i++) {
+								booleans[i] = false;
+								let sel_perm = selected[i];
+
+								for (let j = 0; j < arr.length; j++) {
+									let perm = arr[j];
+
+									if (perm.name === sel_perm) {
+										booleans[i] = true;
+									}
+								}
+							}
+
+							for (let i = 0; i < booleans.length; i++) {
+								if (booleans[i] == false) {
+									return false;
+								}
+							}
+
+							return true;
+						};
+
+						let success_permissions = checker(selected_permissions, permissions);
+						let success_conditions = checker(selected_conditions, conditions);
+						let success_limitations = checker(selected_limitations, limitations);
+
+						if (success_permissions && success_conditions && success_limitations) {
+							availableLicenses.push(license);
+						}
+					});
+
+					// console.log("Found Licenses: " + availableLicenses.length);
+					// console.log(availableLicenses);
+
+					//$("#licenseList").empty();
+
+					//$("#licenseList").append("Found: " + availableLicenses.length + "<br/>");
+
+					app._data.selectedLicenses = [];
+
+					jQuery.each(availableLicenses, function(index, element) {
+						//$("#licenseList").append(element.name + "<br/>" + element.desc + "<br/>");
+
+						app._data.selectedLicenses.push(element);
+					});
+				};
+
+				$(".checkbox").checkbox("setting", "onChange", function() {
+					// alert("Changed");
+					updateLicenses();
+				});
+
+				$(document).ready(function() {
+					updateLicenses();
+				});
+			</script>
+
+			<script>
+				var app = new Vue({
+					el: "#licenseList",
+					data: {
+						selectedLicenses: []
+					},
+
+					mounted: function() {
+						this.displayLicenses();
+					},
+
+					methods: {
+						displayLicenses: function() {}
+					}
+				});
+			</script>
+
+			<script>
+				$(".tooltip").popup();
+			</script>
+		</div>
+	</body>
+</html>

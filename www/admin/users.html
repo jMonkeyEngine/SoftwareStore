@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Asset Store :: Administration</title>
+
+	<script src="/js/admin/page-users.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h1 class="ui dividing header">Administrator :: Users</h1>
+
+		<div th:replace="fragments/admin/admin-menu :: adminMenu"></div>
+
+		<div class="ui search">
+			<div class="ui left icon input">
+				<input type="text" placeholder="Search..." class="searchInput" v-on:keyup.enter="findUsers($event.target.value)" />
+				<i class="user outline icon"></i>
+			</div>
+			<button class="ui green button" @click="displayNewUserModal()"><i class="plus icon"></i>Create User</button>
+		</div>
+
+		<br />
+
+		<div class="ui message" v-if="users != null && users.length == 0">No users found.</div>
+
+		<table class="ui celled table" v-if="users != null && users.length > 0">
+			<thead>
+				<tr>
+					<th>Username</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="user in users">
+					<td data-label="Username">
+						<a :href="'/admin/user/' + user.username">{{ user.username }}</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3 class="ui header">Users Registered in the last 24 hrs</h3>
+		<table class="ui celled table" v-if="recentUsers.length > 0">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Username</th>
+					<th>Registered</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="user in recentUsers">
+					<td class="collapsing">{{ user.id }}</td>
+					<td data-label="Username">
+						<a :href="'/admin/user/' + user.username">{{ user.username }}</a>
+					</td>
+					<td>
+						{{ millisToDate(user.registerDate) }}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="ui message" v-if="recentUsers.length == 0">No users have registered in the last 24 hours.</div>
+		<br /><br />
+		<!-- Create User Modal -->
+		<div class="ui small modal" id="newUserModal">
+			<div class="header">Create User</div>
+			<div class="content">
+				<form class="ui form" id="newUserForm">
+					<table class="ui very basic celled table">
+						<tr>
+							<td class="collapsing">Name</td>
+							<td>
+								<div class="ui input">
+									<input name="username" autocomplete="off" type="text" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="collapsing">Email</td>
+							<td>
+								<div class="ui input">
+									<input name="email" autocomplete="off" type="email" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="collapsing">Password</td>
+							<td>
+								<div class="ui input">
+									<input name="password" autocomplete="new-password" type="password" />
+								</div>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="collapsing"></td>
+							<td>
+								<div class="ui checkbox">
+									<input type="checkbox" name="sendEmail" />
+									<label>Send email to user</label>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div class="actions">
+				<div class="ui green approve button"><i class="user plus icon"></i>Create User</div>
+				<div class="ui red cancel button">Cancel</div>
+			</div>
+		</div>
+		<!-- END Create User Modal -->
+
+	</div>
+</body>
+
+</html>

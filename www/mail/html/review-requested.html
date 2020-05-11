@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Review Requested</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<p th:inline="text">
+			Hi [[${username}]].
+		</p>
+
+		<p>
+			The user <b th:text="${page.owner.username}"></b> has requested a member of staff review their <b th:text="${pagetype}"></b> page
+			<b th:text="${page.details.title}"></b>.
+		</p>
+
+		<p>Please visit the <a href="https://jmonkeystore.com/admin/pages/">Store Page Moderation</a> area if you wish to review this page.</p>
+
+		<p>
+			This is an automated message sent by JmonkeyStore.
+		</p>
+	</body>
+</html>

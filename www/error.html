@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+  <head>
+    <title>Error</title>
+
+  </head>
+
+  <body>
+
+    <div layout:fragment="content">
+      <div class="ui container">
+
+        <br>
+        <h1 class="ui header">Error <span th:text="${status}"></span> : <span th:text="${error}"></span></h1>
+
+        <div class="ui error message" th:if="${message}" th:text="${message}">
+        </div>
+
+        <div class="ui error message" th:if="${message == null}">
+          No reason was specified.
+        </div>
+
+      </div>
+    </div>
+  </body>
+
+</html>

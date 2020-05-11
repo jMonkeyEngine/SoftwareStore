@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Home</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+			<script type="text/javascript" src="/js/view-message.js" defer></script>
+
+			<div class="ui container" id="ViewMessage">
+				<div class="ui active dimmer inverted">
+					<div class="ui text loader">Loading...</div>
+				</div>
+
+				<br />
+
+				<input type="hidden" v-bind:value="message.id" id="messageId" />
+
+				<h3 class="ui header" th:inline="text">
+					<img class="ui floated left image avatar" v-if="message.sender" v-bind:src="'/image/' + message.sender.avatarId" />
+					{{ message.title }}
+
+					<div class="sub header">
+						Sent by <a v-if="message.sender">{{ message.sender.username }}</a> on
+						<span>
+							{{ new Date(message.date).toLocaleString() }}
+						</span>
+					</div>
+				</h3>
+
+				<p>{{ message.message }}</p>
+
+				<div id="replies">
+					<div class="ui comments">
+						<div class="comment" v-for="reply in replies">
+							<a class="avatar">
+								<img v-bind:src="'/image/' + reply.user.avatarId" />
+							</a>
+							<div class="content">
+								<a class="author">{{ reply.user.username }}</a>
+								<div class="metadata">
+									<span class="date">{{ new Date(reply.date).toLocaleString() }}</span>
+								</div>
+								<div class="text">
+									{{ reply.content }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<br />
+				<button id="ReplyButton" class="ui green button"><i class="reply icon"></i>Create Reply</button>
+			</div>
+
+			<div class="ui modal" id="NewReplyModal">
+				<i class="close icon"></i>
+				<div class="header">
+					Reply to Message
+				</div>
+				<div class="content">
+					<div class="ui form">
+						<div class="field">
+							<textarea cols="5" id="replyContent"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="actions">
+					<div class="ui red cancel button">Cancel</div>
+					<div class="ui green button" id="PostReplyButton">OK</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

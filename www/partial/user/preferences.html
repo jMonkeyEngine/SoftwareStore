@@ -1,0 +1,65 @@
+<div>
+
+    <div class="ui grid">
+
+        <div class="four wide column">
+            <div id="sidemenu" class="ui vertical fluid pointing menu">
+                <a id="accountLink" class="active item">Account</a>
+                <a id="profileLink" class="item">Profile</a>
+                <a id="emailsLink" class="item">Emails</a>
+                <a id="notificationsLink" class="item">Notifications</a>
+                <a id="interfaceLink" class="item">Interface</a>
+            </div>
+        </div>
+
+        <div class="twelve wide stretched column">
+            <div id="sideAjaxLoader" class="ui inline loader"></div>
+            <div id="sideMenuContentDiv"></div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+        function menuSecondaryClicked(buttonId, partialPage) {
+            $("#sidemenu > a").removeClass("active");
+            $("#" + buttonId).addClass("active");
+
+            $("#sideAjaxLoader").addClass("active");
+            $("#sideMenuContentDiv").load(partialPage, function() {
+                $("#sideAjaxLoader").removeClass("active");
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        $("#accountLink").click(function() {
+            menuSecondaryClicked($(this).attr('id'), "/user/preferences/partial/account.html");
+         });
+
+         $("#profileLink").click(function() {
+            menuSecondaryClicked($(this).attr('id'), "/user/preferences/partial/profile.html");
+         });
+
+         $("#emailsLink").click(function() {
+            menuSecondaryClicked($(this).attr('id'), "/user/preferences/partial/emails.html");
+         });
+
+         $("#notificationsLink").click(function() {
+            menuSecondaryClicked($(this).attr('id'), "/user/preferences/partial/notifications.html");
+         });
+
+         $("#interfaceLink").click(function() {
+            menuSecondaryClicked($(this).attr('id'), "/user/preferences/partial/interface.html");
+         });
+
+    </script>
+
+    <script type="text/javascript">
+        menuSecondaryClicked("accountLink", "/user/preferences/partial/account.html");
+    </script>
+
+
+</div>
+

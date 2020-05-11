@@ -1,0 +1,41 @@
+#descriptionTextArea {
+	resize: none;
+}
+
+#shortDescTextArea {
+	resize: none;
+}
+
+.hidden-element {
+	display: none;
+}
+
+.sshot-img {
+	max-width: 230px;
+	max-height: 129px;
+}
+
+.img-error {
+}
+
+.img-file-success {
+	background-color: lightgreen !important;
+}
+
+.clear-img {
+	position: absolute;
+	margin: 5px -22px !important;
+	color: grey;
+	cursor: pointer;
+}
+
+.clear-img:hover {
+	color: darkred;
+}
+
+#floatingBar {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	z-index: 200;
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Contact Us</title>
+	</head>
+	<body>
+		<div layout:fragment="content" class="ui container">
+			<br />
+			<h1>Contact Us</h1>
+
+			<p>
+				Fill out the form and we'll get back to you as soon as we can.
+			</p>
+
+			<form class="ui form">
+				<div class="field">
+					<label>Reason</label>
+					<select class="ui fluid dropdown" id="reason">
+						<option value="bug report">Bug Report</option>
+						<option value="customer support">Customer Support</option>
+						<option value="sales">Sales</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label>Message</label>
+					<textarea id="comment"></textarea>
+				</div>
+
+				<div class="field">
+					<label>Email Address</label>
+					<input type="text" id="email" placeholder="Email Address" />
+				</div>
+
+				<a id="sendButton" class="ui green button">Send Message</a>
+			</form>
+
+			<script>
+				$("#sendButton").click(function() {
+					let reason = $("#reason").val();
+					var email = $("#email").val();
+					var comment = $("#comment").val();
+
+					$.post(
+						"/contact/",
+						{
+							reason: reason,
+							email: email,
+							comment: comment,
+							token: token
+						},
+
+						function(result) {
+							console.log(result);
+							if (result.success) {
+								alert("Thanks for posting comment.");
+							} else {
+								alert("You are spammer ! Get the @$%K out.");
+							}
+						}
+					);
+				});
+			</script>
+		</div>
+	</body>
+</html>

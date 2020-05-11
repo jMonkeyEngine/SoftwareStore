@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>View Page</title>
+
+		<link rel="stylesheet" href="/libs/blueimp-gallery/2.33.0/css/blueimp-gallery.min.css" />
+		<link rel="stylesheet" href="/libs/highlightjs/9.15.10/styles/monokai-sublime.css" />
+		<link rel="stylesheet" href="/css/view-page.css" />
+
+		<script src="/libs/blueimp-gallery/2.33.0/js/blueimp-gallery.min.js"></script>
+		<script src="/libs/highlightjs/9.15.10/highlight.pack.js"></script>
+
+		<script src="/libs/markdown-it/markdown-it.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-emoji.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-sub.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-sup.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-ins.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-mark.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-footnote.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-deflist.min.js"></script>
+		<script src="/libs/markdown-it/markdown-it-abbr.min.js"></script>
+
+		<script src="/js/view-page.js" defer></script>
+
+		<meta th:if="${preview != null && preview == false}" property="og:title" th:content="${previewTitle}">
+		<meta th:if="${preview != null && preview == false}" property="og:description" th:content="${previewDescription}">
+		<meta th:if="${preview != null && preview == false}" property="og:url" th:content="${previewUrl}">
+		<meta th:if="${preview != null && preview == false}" property="og:image" th:content="${previewImage}">
+
+	</head>
+	<body>
+		<div layout:fragment="content" class="ui container">
+			<input type="hidden" id="userId" th:value="${user == null ? '' : user.id}" />
+			<input type="hidden" id="pageId" th:value="${pageId}" />
+			<input type="hidden" id="pageState" th:value="${pageState}" />
+			<input type="hidden" id="preview" th:value="${preview}" />
+
+			<div class="ui active dimmer" id="pageLoader">
+				<div class="ui text blue elastic loader">Loading</div>
+			</div>
+
+			<br />
+
+			<div id="app" v-if="page.details != null">
+				<div class="ui yellow raised padded circular segment" v-if="preview">
+					<h2>Live Preview</h2>
+					<p>
+						This is a preview of your store page and is a visual representation of how the page will look on the store. This page is not visible to
+						the public. All areas marked in <span style="color: red;">red</span> <b>must be present</b> before your page will be considered for
+						approval.
+					</p>
+				</div>
+
+				<h1 class="ui dividing header">Content Detail</h1>
+
+				<div>
+					<div v-if="page.softwareType == 'OpenSource' || page.softwareType == 'Sponsored'">
+						<p>This software is <b><span class="ui green text">Open Source</span></b> under the following licenses:</p>
+
+						<div class="ui inverted segment">
+							<div class="ui inverted compact accordion">
+								<div class="title">
+									<i class="dropdown icon"></i>
+									<i class="code icon"></i><span class="ui yellow text">Source Code:</span>
+
+									<span v-if="page.openSourceData.softwareLicense">{{ page.openSourceData.softwareLicense.name }}</span>
+									<span v-else style="color: red;">No software license selected.</span>
+
+								</div>
+
+								<div class="content">
+									<p v-if="page.openSourceData.softwareLicense">
+										{{ page.openSourceData.softwareLicense.desc }}
+									</p>
+									<p v-else style="color: red;">
+										No software license selected.
+									</p>
+								</div>
+
+								<div class="title">
+									<i class="dropdown icon"></i>
+									<i class="photo video icon"></i><span class="ui yellow text">Media:</span>
+									<span v-if="page.openSourceData.mediaLicense">{{ page.openSourceData.mediaLicense.name }}</span>
+									<span v-else style="color: red;">No media license selected.</span>
+								</div>
+
+								<div class="content">
+									<p v-if="page.openSourceData.mediaLicense">
+										{{ page.openSourceData.mediaLicense.desc }}
+									</p>
+									<p v-else style="color: red;">
+										No media license selected.
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<p>
+							<small><b>This is not legal advice. Always consult a professional.</b></small>
+						</p>
+					</div>
+
+					<div class="ui pink segment" v-if="page.softwareType == 'Paid'">
+						<p>In order to use this software you must purchase a copy.</p>
+					</div>
+
+					<div class="ui segment" v-if="page.softwareType == 'Sponsored'">
+						<p>
+							This software is <span class="ui yellow text">completely free</span>, however if you wish to
+							<span class="ui pink text">sponsor the author</span> you may make a one-time payment to them using the button below. Sponsoring is
+							completely optional, but is a great way give your thanks and encourage them to continue development!
+						</p>
+					</div>
+
+					<div class="ui segment" v-if="page.softwareType == 'Sponsored' || page.softwareType == 'Paid'">
+						<p>
+							<!-- Price / Buy Button -->
+							<button class="ui pink button">
+								<span v-if="page.softwareType == 'Sponsored'">Optional:</span>
+								<span v-if="page.softwareType == 'Paid'">Purchase:</span>
+
+								&nbsp;&nbsp;$<span>{{ page.paymentData.price.toFixed(2) }}</span>
+							</button>
+							<!-- END: Price / Buy Button -->
+						</p>
+					</div>
+				</div>
+
+				<!-- Software Type and Licenses -->
+
+				<!-- END: Software Type and Licenses -->
+
+				<div class="ui divider"></div>
+
+				<div class="ui two column stackable grid">
+					<div class="row">
+
+						<div class="column">
+							<h1 class="ui header">
+								<a
+									class="tooltip"
+									v-if="page.softwareType == 'Opensource' && page.openSourceData.isFork"
+									:href="page.openSourceData.forkRepository"
+									target="_blank"
+									data-content="This project is a fork of an existing project."
+								>
+									<i class="random icon"></i>
+								</a>
+								<span>{{ page.details.title }}</span>
+								&nbsp;-&nbsp;
+								<span>{{ page.versionData.version }}</span>
+								<div class="ui label" :class="page.versionData.state == 'Release' ? 'green' : 'grey'">
+									{{ page.versionData.state }}
+								</div>
+							</h1>
+							<p>
+								<a :href="'/user/profile/' + page.owner.id">
+									<img class="ui avatar image" :src="'/image/' + page.owner.avatarId" />
+									<span>{{ page.owner.username }}</span></a
+								>
+								-
+							</p>
+
+							<div>
+								<b>Created:</b> {{ millisToDate(page.dateCreated) }}
+								<div v-if="page.dateCreated !== page.dateUpdated"><b>last updated:</b> {{ millisToDate(page.dateUpdated) }}</div>
+							</div>
+
+							<br />
+
+							<p v-if="page.owner.badges != null && page.owner.badges.length > 0">
+								<span
+									class="ui black label tooltip"
+									data-variation="inverted"
+									v-for="badge in page.owner.badges"
+									:data-content="badge.description"
+									><i :class="badge.icon"></i>{{ badge.name }}</span
+								>
+							</p>
+
+							<!-- Rating -->
+							<p>
+								<b>Average Rating:</b>
+								<span v-if="!preview">{{ page.rating.averageRating.toFixed(1) }} / 5</span>
+								<span v-if="preview"><i>Not available in preview</i></span>
+
+								<span
+									v-if="!preview"
+									class="ui star rating tiny disabled tooltip"
+									id="assetStarRating"
+									:data-content="page.rating.ratingCount + ' reviews'"
+								>
+									<i class="star icon" :class="page.rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+									<i class="star icon" :class="page.rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+									<i class="star icon" :class="page.rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+									<i class="star icon" :class="page.rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+									<i class="star icon" :class="page.rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+								</span>
+							</p>
+							<!-- END: Rating -->
+
+							<br />
+
+							<!-- Short Description -->
+							<p v-if="page.details.shortDescription.length > 0">{{ page.details.shortDescription }}</p>
+							<p style="color: red;" v-if="page.details.shortDescription.length == 0">No short description specified.</p>
+							<!-- END: Short Description -->
+						</div>
+
+						<div class="column">
+							<!-- Screenshots and Youtube Videos -->
+							<div id="gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel blueimp-gallery-controls">
+								<div class="slides"></div>
+								<h3 class="title"></h3>
+								<a class="prev">‹</a>
+								<a class="next">›</a>
+								<a class="play-pause"></a>
+								<ol class="indicator"></ol>
+							</div>
+
+							<div id="carousel-links">
+								<a
+									v-if="getArrayLength(page.mediaLinks.imageIds) > 0 && page.mediaLinks.imageIds.split(',').length > 0"
+									v-for="imgId in page.mediaLinks.imageIds.split(',')"
+									:href="'/image/' + imgId"
+								>
+								</a>
+
+								<a
+									v-if="getArrayLength(page.mediaLinks.videoIds) > 0 && page.mediaLinks.videoIds.split(',').length > 0"
+									v-for="vidId in page.mediaLinks.videoIds.split(',')"
+									:data-youtube="vidId"
+									:href="'https://www.youtube.com/watch/' + vidId"
+									type="text/html"
+								></a>
+							</div>
+
+							<span v-if="getArrayLength(page.mediaLinks.imageIds) === 0" style="color: red;">At least one image is required.</span>
+							<!-- END Screenshots and Youtube Videos -->
+						</div>
+
+
+					</div>
+				</div>
+
+				<div class="ui divider"></div>
+
+				<!-- External link buttons -->
+				<div>
+					<a
+						v-if="(page.softwareType == 'OpenSource' || page.softwareType == 'Sponsored') && page.openSourceData.gitRepository.length > 0"
+						:href="page.openSourceData.gitRepository"
+						target="_blank"
+						class="ui button blue"
+						id="viewOnGithubButton"
+						><i class="github icon"></i>View on Github</a
+					>
+					<span
+						v-if="(page.softwareType == 'OpenSource' || page.softwareType == 'Sponsored') && page.openSourceData.gitRepository.length == 0"
+						class="ui red label tag-item"
+						><i class="github icon"></i>No Git Repository</span
+					>
+
+					<a v-if="page.externalLinks.docsWebsite.length > 0" :href="page.externalLinks.docsWebsite" target="_blank" class="ui button black"
+						><i class="book icon"></i>Documentation</a
+					>
+					<span v-if="page.externalLinks.docsWebsite == 0" class="ui grey label tag-item"><i class="book icon"></i>No Documentation</span>
+
+					<a v-if="page.externalLinks.publisherWebsite.length > 0" :href="page.externalLinks.publisherWebsite" target="_blank" class="ui button black"
+						><i class="external alternate icon"></i>Visit Publisher</a
+					>
+					<span v-if="page.externalLinks.publisherWebsite.length == 0" class="ui grey label tag-item"
+						><i class="book icon"></i>No Publisher Website</span
+					>
+				</div>
+				<!-- END External link buttons -->
+
+				<div class="ui divider"></div>
+
+				<!-- Gradle Partial Script -->
+				<div v-if="(page.softwareType == 'OpenSource' || page.softwareType == 'Sponsored')">
+					<div v-if="getArrayLength(page.buildData.hostedDependencies) > 0">
+						<h4 class="ui header">Add this software to your project</h4>
+
+						<div v-if="">
+							<div style="background:#222; color: #ccc; border-radius: 5px; padding: 10px;">
+								<code>
+									repositories {
+									<div v-for="(repository, index) in page.buildData.repositories.split(',')">
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;{{ repository }}</span>
+									</div>
+
+									}
+									<br /><br />
+									dependencies {<br />
+									<div v-for="dependency in page.buildData.hostedDependencies.split(',')">
+										<span>&nbsp;&nbsp;&nbsp;&nbsp;{{ dependency.replace("$VERSION", page.versionData.version) }}</span>
+									</div>
+									}
+								</code>
+							</div>
+
+							<div class="ui divider"></div>
+						</div>
+
+						<div v-if="pageData.dependsOn.length > 0" v-for="storePage in pageData.dependsOn">
+							Depends on:
+							<span class="tooltip" data-title="Internal Store Page" data-content="This link is safe to click.">
+								<a :href="'/' + storePage.id"
+									><i class="green store icon"></i>
+									{{ storePage.details.title }}
+								</a>
+							</span>
+							<div class="ui divider"></div>
+						</div>
+					</div>
+					<div v-else>
+						<p>
+							This software is not available on any hosted repository service. You must build this software from the
+							<a :href="page.openSourceData.gitRepository" target="_blank">source code</a>.
+						</p>
+					</div>
+				</div>
+
+				<!-- END: Gradle Partial Script -->
+
+				<!-- Engine Compatibility -->
+				<p>
+					<span class="ui yellow text">Compatible Engine Versions:</span>&nbsp;
+					<span v-if="page.versionData.engineCompatibility.length > 0">{{ page.versionData.engineCompatibility }}</span>
+					<span v-else>3.1 and above</span>
+				</p>
+				<!-- END Engine Compatibility -->
+
+				<div class="ui divider"></div>
+
+				<br />
+
+				<!-- Description: Markdown Rendered -->
+				<div id="page-content-div"></div>
+				<!-- END: Description: Markdown Rendered -->
+
+				<p style="color: red;" v-if="page.details.description.length == 0">No Description Specified.</p>
+				<div class="ui divider"></div>
+
+				<!-- Tags -->
+				<b>Tags:</b>
+
+				<span v-if="page.details.tags.length > 0" v-for="tag in page.details.tags.split(',')" class="ui violet label tag-item">
+					<a :href="'/search/?tag=' + encodeURI(tag)">{{ tag }}</a>
+				</span>
+				<span v-if="page.details.tags.length == 0" class="ui label">No Tags Specified</span>
+				<!-- END: Tags -->
+
+				<div class="ui divider"></div>
+
+				<!-- Forks of the parent repository -->
+				<div v-if="pageData.forks.length > 0">
+					<h4>Other Software Forking This Repository</h4>
+
+					<div class="ui horizontal list">
+						<div class="item" v-for="fork in pageData.forks">
+							<img class="ui avatar image" :src="'/image/' + fork.owner.avatarId" />
+							<div class="content">
+								<div class="header">
+									<a :href="'/' + fork.id">{{ fork.details.title }}</a>
+								</div>
+								by {{ fork.owner.username }}
+							</div>
+						</div>
+					</div>
+
+					<div class="ui divider"></div>
+				</div>
+				<!-- END: Forks of the parent repository -->
+
+				<!-- Pages that depend on this page -->
+				<div v-if="pageData.addons.length > 0">
+					<h3>Projects Using This Software</h3>
+
+					<div class="ui horizontal list">
+						<div class="item" v-for="addon in pageData.addons">
+							<img class="ui avatar image" :src="'/image/' + addon.owner.avatarId" />
+							<div class="content">
+								<div class="header">
+									<a :href="'/' + addon.id">{{ addon.details.title }}</a>
+								</div>
+								by {{ addon.owner.username }}
+							</div>
+						</div>
+					</div>
+
+					<div class="ui divider"></div>
+				</div>
+
+				<!-- END: Pages that depend on this page -->
+
+				<!-- REVIEWS / COMMENTS -->
+				<div>
+					<div class="ui comments" style="max-width: 100% !important;" v-if="preview == false">
+						<h1 class="ui header">
+							Reviews
+							<button
+								class="ui green button right floated tooltip"
+								v-if="userId.length > 0"
+								id="writeReviewButton"
+								:disabled="userId == page.owner.id"
+								@click="showWriteReviewModal()"
+							>
+								<i class="pencil alternate icon"></i>Write Review
+							</button>
+						</h1>
+
+						<div class="ui info message" v-if="userId == page.owner.id">
+							You cannot review software on pages that belong to you.
+						</div>
+
+						<div class="ui warning message" v-if="userId == null">
+							You must be logged in to write a review.
+						</div>
+
+						<div class="ui message" th:if="${user != null}" v-if="reviewData.length == 0">
+							There are no reviews yet. Be the first!
+						</div>
+
+						<div class="comment" v-for="(review, index) in reviewData">
+							<a class="ui circular image avatar">
+								<img v-bind:src="'/image/' + review.user.avatarId" />
+							</a>
+
+							<div class="content">
+								<a class="author">{{ review.user.name == null ? review.user.username : review.user.name }}</a>
+								<div class="metadata">
+									<span v-if="review.dateCreated === review.dateUpdated" class="date">{{ millisToDate(review.dateCreated) }}</span>
+									<span v-else class="date">(edited) {{ millisToDate(review.dateUpdated) }}</span>
+
+									<button
+										v-on:click="editReview(index)"
+										id="editReviewButton"
+										class="ui black mini icon button tooltip"
+										:data="index"
+										v-if="userId == review.user.id"
+										data-content="Edit your review"
+									>
+										<i class="edit outline icon"></i>
+									</button>
+
+									<button
+										v-on:click="deleteReview(index)"
+										id="deleteReviewButton"
+										class="ui red mini icon button tooltip"
+										:data="index"
+										v-if="userId == review.user.id"
+										data-content="Permanently delete your review"
+									>
+										<i class="trash alternate outline icon"></i>
+									</button>
+								</div>
+								<div class="text">
+									<div class="ui star rating small disabled">
+										<i class="yellow star icon" v-for="index in review.rating"></i>
+
+										<i class="black star icon" v-for="index in (5 - review.rating)"></i>
+									</div>
+
+									<p style="white-space: pre-line;">
+										{{ review.content }}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Write Review Modal -->
+						<div class="ui modal" id="writeReviewModal">
+							<div class="header">
+								Write A Review
+							</div>
+							<div class="content">
+								<div class="ui form">
+									<input type="hidden" :value="pageId" name="pageId" />
+									<div class="field">
+										<label>Please leave a rating!</label>
+										<input type="hidden" value="" id="reviewRatingVal" />
+										<div class="ui yellow star rating" id="reviewRating"></div>
+									</div>
+									<div class="field">
+										<label>Review</label>
+										<textarea rows="5" id="newReviewContent"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="actions">
+								<button class="ui green ok button">
+									Submit Review
+								</button>
+								<button class="ui red cancel button">
+									Cancel
+								</button>
+							</div>
+						</div>
+
+						<!-- Delete Review Modal -->
+						<div class="ui modal" id="deleteReviewModal">
+							<div class="header">
+								Write A Review
+							</div>
+							<div class="content"><b>Warning:</b> This action cannot be un-done. Are you sure you wish to delete your review?<br /></div>
+							<div class="actions">
+								<button class="ui green ok button">
+									Yes, Delete My Review
+								</button>
+								<button class="ui red cancel button">
+									Cancel
+								</button>
+							</div>
+						</div>
+
+						<!-- Edit Review modal -->
+						<div class="ui modal" id="editReviewModal">
+							<div class="header">
+								Edit Your Review
+							</div>
+							<div class="content">
+								<div class="ui form">
+									<input type="hidden" :value="pageId" name="pageId" />
+									<div class="field">
+										<label>Please leave a rating!</label>
+										<input type="hidden" value="" id="edit_reviewRatingVal" />
+										<div class="ui yellow star rating" id="edit_reviewRating"></div>
+									</div>
+									<div class="field">
+										<label>Review</label>
+										<textarea rows="5" id="edit_newReviewContent"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="actions">
+								<button class="ui green ok button">
+									Submit Review
+								</button>
+								<button class="ui red cancel button">
+									Cancel
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

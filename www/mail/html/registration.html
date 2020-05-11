@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:remove="all">Template for HTML email with inline image</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<p th:inline="text">
+			Hi [[${username}]], thank you for registering at jmonkeystore!
+		</p>
+
+		<p>
+			Please validate your email address using the link below. You will not be able to create assets or post pageReviews until your email has been validated.
+		</p>
+
+		<p><b>Your validation code is: </b> [[${validationCode}]]</p>
+
+		<p>To enter this code, navigate to the <b>User Control Panel</b> manually, or click the link below.</p>
+
+		<p>
+			<a href="https://jmonkeystore.com/user/">https://jmonkeystore.com/user/</a>
+		</p>
+
+		<p>
+			Regards, <br />
+			The JmonkeyStore Team
+		</p>
+	</body>
+</html>

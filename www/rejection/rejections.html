@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Page Rejections</title>
+		<script src="/js/rejection/rejections.js" defer></script>
+	</head>
+	<body>
+		<div layout:fragment="content" class="ui container" id="app">
+			<input type="hidden" id="pageId" th:value="${pageId}" />
+			<input type="hidden" id="pageState" th:value="${pageState}" />
+
+			<div class="ui active dimmer" id="pageLoader">
+				<div class="ui text blue elastic loader">Loading</div>
+			</div>
+
+			<br />
+
+			<div v-if="loaded">
+				<h2 class="ui header">Rejections</h2>
+
+				<p>
+					Showing rejections for your Store page:&nbsp;<span class="ui yellow text">{{ page.details.title }}</span>
+				</p>
+
+				<p>
+					Your page has been rejected <span class="ui yellow text">{{ rejections.length }}</span> time(s).
+				</p>
+
+				<div class="ui segment" v-for="rejection in rejections">
+					<p>
+						Reviewed by <span class="ui yellow text">{{ rejection.reviewer.username }}</span> on {{ millisToDate(rejection.dateReviewed) }}
+					</p>
+					<div class="ui divider"></div>
+					<p style="white-space: pre-wrap;">{{ rejection.review }}</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

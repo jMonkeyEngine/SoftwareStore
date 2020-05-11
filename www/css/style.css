@@ -1,0 +1,92 @@
+.ui.comments .comment .text {
+  margin: 0 !important;
+  padding: .25em 0 .5em !important;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Sticky Footer */
+.site {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* 1, 3 */
+}
+
+.site-header,
+.site-footer {
+  flex: none;
+  /* 2 */
+}
+
+.site-content {
+  flex: 1 0 auto;
+  /* 2 */
+  padding: var(--space) var(--space) 0;
+  width: 100%;
+}
+
+.site-content::after {
+  content: "\00a0";
+  /* &nbsp; */
+  display: block;
+  margin-top: var(--space);
+  height: 0px;
+  visibility: hidden;
+}
+
+@media (--break-lg) {
+  .site-content {
+    padding-top: var(--space-lg);
+  }
+
+  .site-content::after {
+    margin-top: var(--space-lg);
+  }
+}
+
+.site-content--full {
+  padding: 0;
+}
+
+.site-content--full::after {
+  content: none;
+}
+
+/* END Sticky Footer */
+/* TOAST */
+#toastList {
+  position: fixed;
+  left: 30px;
+  bottom: 30px;
+  z-index: 100;
+}
+
+/* END TOAST */
+/* START Search results customization */
+.results {
+  background-color: black !important;
+  box-shadow: inset -1px -1px 1px #333 !important;
+  border: none !important;
+}
+
+.ui.search>.results .result {
+  padding: 10px !important;
+}
+
+.ui.search>.results .result .title {
+  color: white !important;
+  font-weight: normal !important;
+}
+
+.ui.search>.results .result:hover {
+  background-color: #555 !important;
+}
+
+.description {
+  color: white !important;
+}
+
+/* END Search results customization */

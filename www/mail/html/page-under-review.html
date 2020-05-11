@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Page Under Review</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<p th:inline="text">
+			Hi [[${username}]].
+		</p>
+
+		<p th:if="${!amendment}">
+			Your store page <b th:text="${page.details.title}"></b> is now being reviewed. Please be patient whilst a member of staff determines if your page
+			meets the requirements.
+		</p>
+
+		<p th:if="${amendment}">
+			Your changes to your store page <b th:text="${page.details.title}"></b> are now being reviewed. Please be patient whilst a member of staff
+			determines if your changes meets the requirements.
+		</p>
+
+		<p>
+			Regards, <br />
+			The JmonkeyStore Team
+		</p>
+	</body>
+</html>

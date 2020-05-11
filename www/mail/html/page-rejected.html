@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Asset Rejected</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<p th:inline="text">
+			Hi [[${username}]].<br />
+			Your asset <b th:text="${page.details.title}"></b> has been reviewed by a member of staff and has been rejected. The reviewer has stated their
+			reasons below:
+		</p>
+
+		<p th:utext="${reason}"></p>
+
+		<p>
+			Please make the necessary amendments to your page as outlined above and before re-submitting your page for approval.
+		</p>
+
+		<p>
+			Regards, <br />
+			The JmonkeyStore Team
+		</p>
+	</body>
+</html>

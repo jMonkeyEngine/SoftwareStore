@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>User Control Panel</title>
+	<link rel="stylesheet" media="screen" type="text/css" href="/libs/colorpicker/css/colorpicker.css" />
+
+	<link rel="stylesheet" type="text/css" href="/css/user/control-panel.css" />
+
+	<script src="/libs/colorpicker/js/colorpicker.js"></script>
+	<script src="/libs/md5.js"></script>
+	<script src="/js/user/index.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<div>
+			<!-- Username / Title -->
+			<h1 class="ui header">
+				<i v-if="user.administrator" class="shield alternate icon tooltip red" data-content="Administrator"></i>
+				<i v-if="user.moderator" class="shield alternate icon tooltip green" data-content="Moderator"></i>
+				<div class="content">
+					{{ user.username }}
+					<span style="font-size: 0.7em; color: #777;" v-if="user.name"> ( {{ user.name }} ) </span>
+				</div>
+			</h1>
+			<!-- END Username / Title -->
+
+			<!-- Summary -->
+			<div class="ui message">
+				<div class="ui stackable four column grid">
+					<div class="row">
+						<div class="column">
+							<div class="ui yellow mini horizontal statistic">
+								<div class="value">
+									{{ registerDuration }}
+								</div>
+								<div class="label">
+									Days Registered
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui yellow mini horizontal statistic">
+								<div class="value">
+									{{ pageStats.pageCount }}
+								</div>
+								<div class="label">
+									Store Pages
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui yellow mini horizontal statistic">
+								<div class="value">
+									{{ pageStats.reviewCount }}
+								</div>
+								<div class="label">
+									Reviews Received
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui yellow mini horizontal statistic">
+								<div class="value">
+									{{ pageStats.averateRating.toFixed(2) }}
+								</div>
+								<div class="label">
+									Average Rating
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- END Summary -->
+
+			<!-- Badges -->
+			<h2 class="ui dividing header"><a id="badges">Badges</a></h2>
+			<p>
+				<span v-if="user.badges != null && user.badges.length > 0" class="ui black label tooltip" data-variation="inverted" v-for="badge in user.badges" :data-content="badge.description"><i :class="badge.icon"></i>{{ badge.name }}</span>
+				<span v-if="user.badges == null || user.badges.length == 0">None</span>
+			</p>
+			<!-- END badges -->
+
+			<!-- Account -->
+			<h2 class="ui dividing header"><a id="account">Account</a></h2>
+
+			<div class="ui icon message" v-if="validation">
+				<i class="exclamation circle icon"></i>
+				<span v-if="validation.validationType === 'Email'">Your request to change your email address requires validation.</span>
+				<span v-if="validation.validationType === 'Password'">Your request to change your password requires validation.</span>
+				<span v-if="validation.validationType === 'Account'">Your account requires validation.</span>
+			</div>
+
+			<table class="ui compact very basic table">
+				<tbody>
+					<tr v-if="validation">
+						<td class="collapsing">Validation Code</td>
+						<td>
+							<div class="ui input">
+								<input id="validationCode" type="text" />
+							</div>
+						</td>
+						<td>
+							<div class="ui icon buttons">
+								<button @click="validateCode()" class="ui black button tooltip" data-content="Validate Code">
+									<i class="check icon"></i>
+								</button>
+								<button @click="resendValidation()" class="ui black button tooltip" data-content="Re-Send Email">
+									<i class="sync icon"></i>
+								</button>
+								<button @click="cancelValidationRequest()" v-if="validation != null && validation.validationType != 'Account'" class="ui black button tooltip" data-content="Cancel Validation Request">
+									Cancel
+								</button>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="collapsing">Name</td>
+						<td class="collapsing">
+							<div id="nameInputDiv" class="ui input">
+								<input id="nameInput" type="text" :value="user.name" @keyup="nameKeyUp()" autocomplete="new-password" />
+							</div>
+						</td>
+						<td>
+							<button v-on:click="updateName()" id="updateNameButton" class="tiny black ui button" disabled>
+								<i class="pencil alternate icon"></i>Change
+							</button>
+						</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td class="collapsing">Username</td>
+						<td class="collapsing">
+							<div id="usernameInputDiv" class="ui input">
+								<input class="tooltip" id="usernameInput" type="text" :value="user.username" :data-content="'People can mention you as @' + user.username" @keyup="usernameKeyUp()" />
+							</div>
+						</td>
+						<td>
+							<button v-on:click="updateUsername()" id="updateUsernameButton" class="tiny black ui button" disabled>
+								<i class="pencil alternate icon"></i>Change
+							</button>
+						</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td class="collapsing">Email</td>
+						<td v-if="user_email.length == 0">
+							<button @click="requestUserEmail(user.id)" class="ui tiny black button"><i class="envelope outline icon"></i>Show</button>
+						</td>
+						<td v-if="user_email.length > 0" class="collapsing">
+							<div class="ui input">
+								<input id="emailInput" type="email" :value="user_email" @keyup="emailKeyUp()" />
+							</div>
+						</td>
+						<td>
+							<button v-on:click="changeDetails('email')" id="changeEmailButton" data-content="We'll send you an email to confirm this change." class="tiny orange ui button tooltip" disabled>
+								<i class="envelope outline icon"></i>Send Request
+							</button>
+						</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td class="collapsing">Password</td>
+						<td>
+							<div class="ui input">
+								<input id="passwordInput1" type="password" value="" placeholder="password" autocomplete="new-password" @keyup="passwordKeyUp1()" />
+							</div>
+						</td>
+						<td class="collapsing">
+							<div class="ui input">
+								<input id="passwordInput2" type="password" disabled value="" placeholder="confirm password" @keyup="passwordKeyUp2()" autocomplete="new-password" />
+							</div>
+						</td>
+						<td>
+							<button v-on:click="changeDetails('password')" id="changePasswordButton" data-content="We'll send you an email to confirm this change." class="tiny orange ui button tooltip" disabled>
+								<i class="key icon"></i>Send Request
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- END Account -->
+
+			<!-- Avatar -->
+			<h2 class="ui dividing header"><a id="avatar">Avatar</a></h2>
+			<img v-if="user.avatarId" id="avatar-preview" class="ui middle aligned circular tiny image" :src="'/image/' + user.avatarId" style="margin-right: 20px;" />
+			<div class="ui small buttons">
+				<button v-on:click="systemAssignedAvatar()" id="systemManagedAvatarButton" class="ui button black">System Managed</button>
+				<div class="or"></div>
+				<button v-on:click="gravatarAvatar()" id="gravatarAvatarButton" class="ui button black">Gravatar</button>
+				<div class="or"></div>
+				<button v-on:click="customAvatar()" id="customImageAvatarButton" class="ui button black">Custom Image</button>
+			</div>
+			<!-- END Avatar -->
+
+			<!-- Avatar Modals -->
+			<div th:replace="fragments/modals/system-assigned-avatar :: systemAssignedAvatar"></div>
+			<div th:replace="fragments/modals/gravatar-avatar :: gravatarAvatar"></div>
+			<div th:replace="fragments/modals/custom-avatar :: customAvatar"></div>
+			<!-- END Avatar Modals -->
+		</div>
+
+		<br /><br />
+
+	</div>
+</body>
+
+</html>

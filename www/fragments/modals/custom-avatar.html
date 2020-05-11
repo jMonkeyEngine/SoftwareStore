@@ -1,0 +1,27 @@
+<html>
+	<body>
+		<div class="ui modal tiny" id="customAvatarModal" th:fragment="customAvatar">
+			<div class="header"><i class="user circle outline icon"></i>Change Avatar > Custom</div>
+
+			<div class="ui content">
+				<div class="ui message">Images must be <b>JPEG</b> format and no larger than 320x320 in dimensions.</div>
+				<img id="custom-avatar-image" src="" />
+				<form method="POST" action="/api/avatar/custom/" enctype="multipart/form-data" id="custom-avatar-form">
+					<input @change="customAvatarChanged()" id="custom-avatar-input" name="avatar" type="file" accept="image/jpeg" />
+				</form>
+			</div>
+
+			<div class="actions">
+				<div class="ui red cancel button">
+					<i class="remove icon"></i>
+					Cancel
+				</div>
+
+				<div class="ui green ok button">
+					<i class="check icon"></i>
+					Ok
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

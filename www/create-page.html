@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Create New Store Page</title>
+
+	<script src="/js/create-page.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container">
+		<br />
+
+		<h1 class="ui header">Create New Store Page</h1>
+		<p>
+			Creating a store page starts with a draft. Submitting your asset page at this time will <b>not</b> put your asset page on the asset store. Your
+			page will be saved and allow you to make changes until you are ready to submit it for pageReview. When you are sure your page is complete you
+			may then <b>Submit Your Asset for Review</b>. Once your asset has been reviewed you will recieve an email notifying you of the outcome. If your
+			submission is successful it will become a live page on the store available for the public to view.
+		</p>
+
+		<p>The process is as follows:</p>
+
+		<div class="ui  list">
+			<div class="item">
+				<i class="green check icon"></i>
+				<div class="content">Create a draft page (you are here).</div>
+			</div>
+
+			<div class="item">
+				<i class="blue angle right icon"></i>
+				<div class="content">Spend as much time as you like editing the page until you feel the page is ready to be reviewed.</div>
+			</div>
+
+			<div class="item">
+				<i class="blue angle right icon"></i>
+				<div class="content">
+					Submit your page for pageReview.
+					<div class="list">
+						<div class="item">
+							<i class="blue angle right icon"></i>
+							<div class="content">If your page is approved it will become live on the store and visible to everybody.</div>
+						</div>
+						<div class="item">
+							<i class="blue angle right icon"></i>
+							<div class="content">
+								If your page is rejected you will be emailed notifying you of the reason(s) and information on how to resolve the problems.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<form class="ui form" id="newAssetForm">
+			<div class="ui divider"></div>
+
+			<h3>Software Title</h3>
+			<p>Choose a title for your software. Use Title Case text formatting.</p>
+
+			<div class="field">
+				<div class="ui right labeled input">
+					<input id="titleField" type="text" placeholder="My Awesome Software" name="title" maxlength="64" />
+					<div id="titleCharCount" class="ui label">
+						0 / 64
+					</div>
+				</div>
+			</div>
+
+			<div class="ui divider"></div>
+
+			<!-- Asset Type -->
+			<div>
+				<h3>Software Type</h3>
+				<p>
+					There are three types of software you may publish to the store. Once you have chosen a type you <b>cannot change</b>
+					it in the future.
+				</p>
+				<div class="ui bulleted list">
+					<div class="item">
+						<div class="content">
+							<div class="header">Open Source</div>
+							Open source software is freely available to anybody, usually under a permissive license that allows others to use your code
+							commercially.
+						</div>
+					</div>
+					<div class="item">
+						<div class="content">
+							<div class="header">Sponsored</div>
+							Sponsored software is open source, but allow others to pay one-time payments to support the developer if they wish. Payments are
+							not mandatory to use the software, and no restrictions apply if no payment is given. Payments are completely optional and at the
+							discretion of the user.
+						</div>
+					</div>
+					<div class="item">
+						<div class="content">
+							<div class="header">Paid</div>
+							Paid software is sold for a fixed price and must be purchased in order to obtain and use it.
+						</div>
+					</div>
+				</div>
+
+				<div class="grouped fields">
+					<label for="assetType">Please select the type of asset you wish to publish:</label>
+					<div class="field">
+						<div class="ui radio checkbox softwareType">
+							<input type="radio" name="softwareType" value="opensource" checked="checked" tabindex="0" class="hidden" />
+							<label>Open Source</label>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui radio checkbox softwareType">
+							<input type="radio" name="softwareType" value="sponsored" tabindex="1" class="hidden" th:disabled="${!user.administrator}" />
+							<label>Sponsored</label>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui radio checkbox softwareType">
+							<input type="radio" name="softwareType" value="paid" tabindex="2" class="hidden" th:disabled="${!user.administrator}" />
+							<label>Paid</label>
+						</div>
+					</div>
+				</div>
+				<div class="ui icon message">
+					<i class="info circle icon"></i>
+					<div class="content">
+						<div class="header">
+							Information
+						</div>
+						<p>
+							Sponsored and Paid software pages are currently unavailable. We are working toward providing these features in the near future.
+						</p>
+					</div>
+				</div>
+			</div>
+			<!-- END Asset Type -->
+
+			<div class="ui divider"></div>
+
+			<!-- Git Repository data -->
+			<div id="git-repository-data">
+				<!-- Git Repository -->
+				<h3>Git Repository</h3>
+				<p>
+					Specify the git repository that contains the source code of your work. Your repository must be hosted on either
+					<i class="github icon"></i><a href="https://github.com" target="_blank">GitHub</a>, <i class="bitbucket icon"></i><a href="https://bitbucket.org" target="_blank">BitBucket</a> or <i class="gitlab icon"></i><a href="https://gitlab.com"
+						target="_blank">GitLab</a>.
+				</p>
+
+				<div class="field">
+					<div class="ui input">
+						<input type="text" name="gitRepo" placeholder="e.g. https://github.com/jMonkeyEngine/jmonkeyengine" />
+					</div>
+				</div>
+				<!-- END Git Repository -->
+
+				<div class="ui divider"></div>
+
+				<!-- Forked Work - Open Source Assets -->
+				<h3>Forked Repositories</h3>
+				<p>
+					If your software is a fork of another repository your project will appear in searches and the "forks" section of other assets that have
+					forked this repository.
+					<b>If your project is a fork you MUST specify it as such, even if the original repository or other forks are not listed on the asset
+						store.</b>
+				</p>
+				<div class="field">
+					<div class="ui checkbox" id="forkedCheckBox">
+						<input type="checkbox" name="forked" />
+						<label>This project is a fork of another project</label>
+					</div>
+				</div>
+
+				<div class="field hidden" id="parentRepoInput">
+					<label>Original repository url</label>
+					<div class="ui input">
+						<input type="text" name="forkedRepo" placeholder="e.g. https://github.com/jMonkeyEngine/jmonkeyengine" />
+					</div>
+				</div>
+				<!-- END: Forked Work - Open Source Assets -->
+
+				<div class="ui divider"></div>
+			</div>
+
+			<!-- END Git Repository data -->
+
+			<!-- Terms and Conditions -->
+			<div>
+				<h3>Terms and Conditions</h3>
+				<p>Please ensure you fully read and understand the <a href="/legal/terms/">Terms and Conditions</a>.</p>
+				<div class="required field">
+					<div class="ui checkbox">
+						<input type="checkbox" name="termsAccepted" />
+						<label>I agree to the Terms and Conditions</label>
+					</div>
+				</div>
+			</div>
+			<!-- END: Terms and Conditions -->
+
+			<div class="ui divider"></div>
+
+			<div class="ui green button" id="submitAssetButton"><i class="plus icon"></i>Create New Draft</div>
+		</form>
+
+		<br />
+		<br />
+
+		<script type="text/javascript">
+			let titleLength = 0;
+			let titleMax = 64;
+
+			$("#titleField").keyup(function(event) {
+				titleLength = $(this).val().length;
+				$("#titleCharCount").html(titleLength + " / 64");
+			});
+
+			$("#titleField").keypress(function(event) {
+				if (titleLength > titleMax) {
+					event.preventDefault();
+				}
+			});
+
+			let contentLength = 0;
+			let contentMax = 10000;
+
+			$("#descriptionTextArea").keyup(function(event) {
+				contentLength = $(this).val().length;
+				$("#descriptionCounter").html(numberWithCommas(contentLength) + " / " + numberWithCommas(contentMax));
+			});
+
+			$("#descriptionTextArea").keypress(function(event) {
+				if (contentLength > contentMax) {
+					event.preventDefault();
+					trimDescription();
+				}
+			});
+
+			// prevent paste
+			$("#descriptionTextArea").bind("paste", function(event) {
+				if (contentLength > contentMax) {
+					event.preventDefault();
+					trimDescription();
+				}
+			});
+
+			function trimDescription() {
+				var text = $("#descriptionTextArea").val();
+				text = text.substr(0, contentMax);
+				$("#descriptionTextArea").val(text);
+			}
+
+			// https://stackoverflow.com/a/2901298
+			function numberWithCommas(x) {
+				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+		</script>
+	</div>
+</body>
+
+</html>

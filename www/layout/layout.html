@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" th:text="${pageTitle}"></title>
+
+	<link rel="shortcut icon" type="image/icon" href="/favicon.ico" />
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-143545224-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag("js", new Date());
+
+		gtag("config", "UA-143545224-1");
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="/libs/semantic/dist/semantic.min.css" />
+
+	<script src="/libs/jquery/jquery-3.5.1.min.js"></script>
+	<script src="/libs/semantic/dist/semantic.min.js"></script>
+	<script src="/libs/moment/2.24.0/moment.min.js"></script>
+	<script src="/libs/vuejs/2.6.11/vue.js"></script>
+
+	<script src="/js/page-api.js"></script>
+
+	<script src="/js/toast.js" defer></script>
+	<script src="/js/common.js" defer></script>
+</head>
+
+<body>
+	<div th:replace="fragments/sidebar :: sidebar"></div>
+
+	<div class="pusher">
+		<div th:replace="fragments/header :: header"></div>
+		<div layout:fragment="content"></div>
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+</body>
+
+</html>

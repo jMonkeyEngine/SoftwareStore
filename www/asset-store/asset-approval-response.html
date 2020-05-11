@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Approve Asset</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+			<div class="ui container">
+				<br />
+
+				<div th:if="${error}">
+					<h4>Action Required</h4>
+					<p>
+						The following preliminary errors were encountered and must be fixed before your liveOpenSourceAsset will submitted for an approval request:
+					</p>
+
+					<ul>
+						<li th:each="msg : ${error}" th:text="${msg}"></li>
+					</ul>
+
+					<p>
+						Your asset has not been submitted for approval at this time.
+					</p>
+
+					<button onclick="javascript:window.history.back()" class="ui blue button">Back</button>
+				</div>
+
+				<div th:if="${error == null}">
+					<h4>Submission Accepted</h4>
+					<p>
+						Your asset has been successfully submitted for approval. You will recieve an email notifying you of the outcome once your
+						liveOpenSourceAsset has been approved.
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

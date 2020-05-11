@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Inbox</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+			<script type="text/javascript" src="/js/messages-index.js" defer></script>
+
+			<div class="ui container" id="MessagesPage">
+				<br />
+
+				<h1 class="ui celled header">
+					Messages :: Inbox
+					<button id="NewMessageButton" href="/messages/create/" class="ui green button right floated">
+						<i class="envelope outline icon"></i>New Message
+					</button>
+				</h1>
+				<br />
+				<table class="ui very basic compact celled table">
+					<thead>
+						<th></th>
+						<th>Message</th>
+						<th>From</th>
+					</thead>
+					<tr v-for="message in messages">
+						<td class="collapsing">
+							<i :class="{ 'green' : message.delivered == false}" class="envelope icon"></i>
+						</td>
+						<td>
+							<a v-bind:href="'/messages/'+ message.id">{{ message.title }}</a>
+						</td>
+						<td class="collapsing">
+							<img class="ui avatar image" v-bind:src="'/image/' + message.sender.avatarId" />
+							<span>{{ message.sender.username }}</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- START new message modal -->
+			<div class="ui modal" id="NewMessageModal">
+				<i class="close icon"></i>
+				<div class="header">
+					New Message
+				</div>
+				<div class="ui form content">
+					<div class="field">
+						<div class="ui search">
+							<div class="ui icon input">
+								<input id="NewMessageUsername" class="prompt" type="text" placeholder="Search Username..." />
+								<i class="user icon"></i>
+							</div>
+							<div class="results"></div>
+						</div>
+					</div>
+
+					<div class="field">
+						<label>Title</label>
+						<div class="ui input">
+							<input minlength="3" maxlength="128" id="NewMessageTitle" type="text" placeholder="Title" />
+						</div>
+					</div>
+
+					<div class="field">
+						<label>Message</label>
+						<textarea id="NewMessageContent" placeholder="Message Content" minlength="3" maxlength="128"></textarea>
+					</div>
+				</div>
+
+				<div class="actions">
+					<div class="ui cancel button">Cancel</div>
+					<div class="ui green button" id="SendNewMessageButton">Send Message</div>
+				</div>
+			</div>
+			<!-- END new message modal -->
+		</div>
+	</body>
+</html>

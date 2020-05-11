@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Profile</title>
+
+	<script src="/js/user/profile.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<!-- Username / Title -->
+		<h1 class="ui dividing header">
+			<i v-if="pageStats.userProfile.administrator" class="shield alternate icon tooltip red" data-content="Administrator"></i>
+			<i v-if="pageStats.userProfile.moderator" class="shield alternate icon tooltip green" data-content="Moderator"></i>
+			<div class="content">
+				{{ pageStats.userProfile.username }}
+				<span style="font-size: 0.7em; color: #777;" v-if="pageStats.userProfile.name"> ( {{ pageStats.userProfile.name }} ) </span>
+			</div>
+		</h1>
+		<!-- END Username / Title -->
+
+		<!-- badges -->
+		<div v-if="pageStats.userProfile.badges && pageStats.userProfile.badges.length > 0">
+			<span class="ui black label tooltip" data-variation="inverted" v-for="badge in user.badges" :data-content="badge.description"><i :class="badge.icon"></i>{{ badge.name }}</span>
+			<div class="ui divider"></div>
+		</div>
+		<!-- END badges -->
+
+		<!-- Summary -->
+		<div class="ui message">
+			<div class="ui stackable four column grid">
+				<div class="row">
+					<div class="column">
+						<div class="ui yellow mini horizontal statistic">
+							<div class="value">
+								{{ pageStats.registerDuration }}
+							</div>
+							<div class="label">
+								Days Registered
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="ui yellow mini horizontal statistic">
+							<div class="value">
+								{{ pageStats.pageCount }}
+							</div>
+							<div class="label">
+								Store Pages
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="ui yellow mini horizontal statistic">
+							<div class="value">
+								{{ pageStats.reviewCount }}
+							</div>
+							<div class="label">
+								Reviews Received
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="ui yellow mini horizontal statistic">
+							<div class="value">
+								{{ pageStats.averateRating.toFixed(2) }}
+							</div>
+							<div class="label">
+								Average Rating
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<a class="ui green button" :href="'/search/?author=' + pageStats.userProfile.username">Browse User Assets</a>
+
+		<br /><br />
+
+		<!--
+			<div v-if="assets.opensource && assets.opensource.length > 0">
+				<h2 class="ui dividing header">Open Source Assets</h2>
+
+				<div v-for="asset in assets.opensource">
+					<div class="ui two column stackable grid">
+						<div class="row">
+							<div class="three wide column">
+								<img class="ui image" :src="'/image/' + asset.mediaLinks.imageIds[0]" />
+							</div>
+							<div class="column">
+								<h3 class="ui header">{{ asset.details.title }}</h3>
+								<p>{{ asset.details.shortDescription }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="ui dividing header"></div>
+				</div>
+            </div>
+            -->
+	</div>
+</body>
+
+</html>

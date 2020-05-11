@@ -1,0 +1,426 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<script type="text/javascript">
+		// USER: name
+		$("#nameInput").keyup(function() {
+			$("#updateNameButton").attr("disabled", false);
+		});
+
+		$("#updateNameButton").click(function() {
+			var jsonData = { name: $("#nameInput").val() };
+			var jsonString = JSON.stringify(jsonData);
+
+			var success = function() {
+				$("#nameInputDiv").removeClass("error");
+				$("#updateUsernameButton").attr("disabled", true);
+				$("#nameInput").transition("glow");
+			};
+
+			var error = function() {
+				$("#nameInputDiv").addClass("error");
+			};
+
+			postJsonAjax("/user/preferences/update/name/", jsonString, success, error);
+		});
+
+		// USER: username
+		$("#usernameInput").keyup(function() {
+			$("#updateUsernameButton").attr("disabled", false);
+		});
+
+		$("#updateUsernameButton").click(function() {
+			var jsonData = { username: $("#usernameInput").val() };
+			var jsonString = JSON.stringify(jsonData);
+
+			var success = function() {
+				$("#usernameInputDiv").removeClass("error");
+				$("#updateUsernameButton").attr("disabled", true);
+				$("#usernameInput").transition("glow");
+			};
+
+			var error = function() {
+				$("#usernameInputDiv").addClass("error");
+			};
+
+			postJsonAjax("/user/preferences/update/name/", jsonString, success, error);
+		});
+
+		// utility functions
+		function postJsonAjax(serverUrl, jsonData, successFunction, errorFunction) {
+			$.ajax({
+				url: serverUrl,
+				type: "POST",
+				contentType: "application/json; charset=utf-8",
+				data: jsonData,
+				cache: false,
+				processData: false,
+				success: successFunction,
+				error: errorFunction
+			});
+		}
+
+		// popups
+		$("#usernameInput").popup();
+		$("#changeEmailButton").popup();
+		$("#changePasswordButton").popup();
+	</script>
+
+	<div>
+		<h1 class="ui header">Account</h1>
+		<div class="ui divider"></div>
+
+		<table class="ui compact celled very basic table">
+			<tbody>
+				<tr>
+					<td class="collapsing">Name</td>
+					<td class="collapsing">
+						<div id="nameInputDiv" class="ui input">
+							<input id="nameInput" type="text" th:value="${user.name}" />
+						</div>
+					</td>
+					<td>
+						<button id="updateNameButton" class="tiny ui button" disabled><i class="pencil alternate icon"></i>Change</button>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="collapsing">Username</td>
+					<td class="collapsing">
+						<div id="usernameInputDiv" class="ui input">
+							<input
+								id="usernameInput"
+								type="text"
+								th:value="${user.username}"
+								th:attr="data-content='People can mention you as @' + ${user.username}"
+							/>
+						</div>
+					</td>
+					<td>
+						<button id="updateUsernameButton" class="tiny ui button" disabled><i class="pencil alternate icon"></i>Change</button>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="collapsing">Email</td>
+					<td class="collapsing">
+						<div class="ui input">
+							<input id="usernameInput" type="text" th:value="${user.email}" />
+						</div>
+					</td>
+					<td>
+						<button id="changeEmailButton" data-content="We'll send you an email to confirm this change." class="tiny  ui button">
+							<i class="envelope outline icon"></i>Send Request
+						</button>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="collapsing">Password</td>
+
+					<td>
+						<button
+							id="changePasswordButton"
+							data-content="We'll send you an email with a link to change your password."
+							class="tiny orange ui button"
+						>
+							<i class="key icon"></i>Send Request
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="ui divider"></div>
+
+		<h2 class="ui header">Profile Picture</h2>
+
+		<img class="ui middle aligned circular image" th:src="@{|/image/${user.avatarId}}" />
+
+		<div class="ui small buttons">
+			<button id="systemManagedAvatarButton" class="ui button black">System Managed</button>
+			<div class="or"></div>
+			<button id="gravatarAvatarButton" class="ui button blue">Gravatar</button>
+			<div class="or"></div>
+			<button id="customImageAvatarButton" class="ui button purple">Custom Image</button>
+		</div>
+
+		<div class="ui modal small" id="changeAvatarModal">
+			<div class="header"><i class="user circle outline icon"></i>Change Avatar</div>
+
+			<div class="ui content">
+				<div class="ui list">
+					<div class="item">
+						<img class="ui avatar image" th:src="${avatar}" />
+						<div class="content">
+							<a class="header systemAssignedAvatarLink">System Assigned</a>
+							<div class="description">Create an avatar using your initials from your name or username.</div>
+						</div>
+					</div>
+
+					<div class="item">
+						<img class="ui avatar image" src="/images/icons/gravatar-32x32.png" />
+						<div class="content">
+							<a class="header gravatarAvatarLink">Gravatar</a>
+							<div class="description">Use gravatar based on your email address.</div>
+						</div>
+					</div>
+
+					<div class="item">
+						<img class="ui avatar image" th:src="@{|/image/${user.avatarId}}" />
+						<div class="content">
+							<a class="header customAvatarLink">Custom</a>
+							<div class="description">Upload a custom image.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="actions">
+				<div class="ui red cancel button">
+					<i class="remove icon"></i>
+					Cancel
+				</div>
+			</div>
+		</div>
+
+		<div class="ui modal small" id="systemAssignedAvatarModal">
+			<div class="header"><i class="user circle outline icon"></i>Change Avatar > System Assigned Avatar</div>
+
+			<div class="ui content">
+				<div class="ui grid">
+					<div class="four wide column">
+						<table class="ui compact very basic table">
+							<tbody>
+								<tr>
+									<td class="collapsing">
+										<div id="backgroundColorSelector" class="colorSelector"><div style="background-color: #dddddd"></div></div>
+									</td>
+									<td><i class="eye dropper icon"></i></td>
+								</tr>
+
+								<tr>
+									<td class="collapsing">
+										<div id="fontColorSelector" class="colorSelector"><div style="background-color: #222222"></div></div>
+									</td>
+									<td><i class="font icon"></i></td>
+								</tr>
+
+								<tr>
+									<td class="collapsing">
+										<div class="ui fitted slider checkbox" style="vertical-align: middle;">
+											<input id="uppercaseSystemAvatar" type="checkbox" /> <label></label>
+										</div>
+									</td>
+									<td><i class="arrow alternate circle up outline icon"></i></td>
+								</tr>
+
+								<tr>
+									<td class="collapsing">
+										<div class="ui fitted slider checkbox" style="vertical-align: middle;">
+											<input id="boldSystemAvatar" type="checkbox" /> <label></label>
+										</div>
+									</td>
+									<td><i class="bold icon"></i></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="twelve wide column">
+						<img id="systemAssignedPreview" class="ui image" th:src="@{|/image/${user.avatarId}}" />
+						<br />
+						<button id="updateSystemAssignedAvatar" class="ui button">Preview Changes</button>
+					</div>
+				</div>
+			</div>
+
+			<style type="text/css">
+				.colorSelector {
+					position: relative;
+					width: 36px;
+					height: 36px;
+					/*background: url(/libs/colorpicker/images/select.png);*/
+					float: left;
+				}
+				.colorSelector div {
+					position: absolute;
+					top: 3px;
+					left: 3px;
+					width: 30px;
+					height: 30px;
+					background: url(/libs/colorpicker/images/select.png) center;
+				}
+				.colorpicker {
+					z-index: 9999;
+				}
+			</style>
+
+			<script type="text/javascript" th:inline="javascript">
+				var bgColor = "";
+				var fgColor = "";
+				var useBold = false;
+				var useUppercase = true;
+
+				var user_name = /*[[${user.name}]]*/ "";
+				var user_username = /*[[${user.username}]]*/ "";
+
+				var usedName = !user_name || user_name.length == 0 ? user_username : user_name;
+				usedName = encodeURIComponent(usedName);
+
+				function updateSystemAssignedAvatar() {
+					var url = "https://ui-avatars.com/api/" + "?name=" + usedName + "&size=128";
+
+					if (bgColor.length > 0) url += "&background=" + bgColor;
+
+					if (fgColor.length > 0) url += "&color=" + fgColor;
+
+					url += "&bold=" + useBold;
+					url += "&uppercase=" + useUppercase;
+
+					$("#systemAssignedPreview").attr("src", url);
+				}
+
+				$("#backgroundColorSelector").ColorPicker({
+					color: "#dddddd",
+					onShow: function(colpkr) {
+						$(colpkr).fadeIn(100);
+						return false;
+					},
+					onHide: function(colpkr) {
+						$(colpkr).fadeOut(100);
+						return false;
+					},
+					onChange: function(hsb, hex, rgb) {
+						$("#backgroundColorSelector div").css("backgroundColor", "#" + hex);
+						bgColor = hex;
+						//updateSystemAssignedAvatar();
+					}
+				});
+
+				$("#fontColorSelector").ColorPicker({
+					color: "#222222",
+					onShow: function(colpkr) {
+						$(colpkr).fadeIn(100);
+						return false;
+					},
+					onHide: function(colpkr) {
+						$(colpkr).fadeOut(100);
+						return false;
+					},
+					onChange: function(hsb, hex, rgb) {
+						$("#fontColorSelector div").css("backgroundColor", "#" + hex);
+						fgColor = hex;
+						//updateSystemAssignedAvatar();
+					}
+				});
+
+				$("#uppercaseSystemAvatar").click(function() {
+					useUppercase = $(this).is(":checked");
+				});
+
+				$("#boldSystemAvatar").click(function() {
+					useBold = $(this).is(":checked");
+				});
+
+				$("#updateSystemAssignedAvatar").click(function() {
+					updateSystemAssignedAvatar();
+				});
+			</script>
+
+			<div class="actions">
+				<div class="ui red cancel button">
+					<i class="remove icon"></i>
+					Cancel
+				</div>
+
+				<div class="ui green ok button">
+					<i class="check icon"></i>
+					Save Changes
+				</div>
+			</div>
+		</div>
+
+		<div class="ui modal small" id="gravatarAvatarModal">
+			<div class="header"><i class="user circle outline icon"></i>Change Avatar > Gravatar</div>
+
+			<div class="ui content">
+				Gravatar Modal
+			</div>
+
+			<div class="actions">
+				<div class="ui red cancel button">
+					<i class="remove icon"></i>
+					Cancel
+				</div>
+
+				<div class="ui green ok button">
+					<i class="check icon"></i>
+					Ok
+				</div>
+			</div>
+		</div>
+
+		<div class="ui modal small" id="customAvatarModal">
+			<div class="header"><i class="user circle outline icon"></i>Change Avatar > Custom</div>
+
+			<div class="ui content">
+				Custom Modal
+			</div>
+
+			<div class="actions">
+				<div class="ui red cancel button">
+					<i class="remove icon"></i>
+					Cancel
+				</div>
+
+				<div class="ui green ok button">
+					<i class="check icon"></i>
+					Ok
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			$("#systemAssignedAvatarModal ,#gravatarAvatarModal, #customAvatarModal")
+				.modal({ blurring: true })
+				.modal("setting", "transition", "scale");
+
+			$("#systemManagedAvatarButton").click(function() {
+				$("#systemAssignedAvatarModal").modal("show");
+			});
+
+			$("#gravatarAvatarButton").click(function() {
+				$("#gravatarAvatarModal").modal("show");
+			});
+
+			$("#customImageAvatarButton").click(function() {
+				$("#customAvatarModal").modal("show");
+			});
+
+			$("#systemAssignedAvatarModal").modal({
+				onApprove: function() {
+					var extUrl = $("#systemAssignedPreview").prop("src");
+
+					var data = {
+						backgroundColor: bgColor,
+						foregroundColor: fgColor,
+						bold: useBold,
+						uppercase: useUppercase
+					};
+
+					var jsonString = JSON.stringify(data);
+
+					$.ajax({
+						url: "/avatar/system-managed/",
+						type: "POST",
+						contentType: "application/json; charset=utf-8",
+						data: jsonString,
+						cache: false,
+						processData: false,
+						success: function() {
+							window.alert("Success");
+						}
+					});
+				}
+			});
+		</script>
+	</div>
+</html>

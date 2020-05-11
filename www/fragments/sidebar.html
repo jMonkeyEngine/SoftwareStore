@@ -1,0 +1,61 @@
+<html>
+
+<body>
+	<div class="ui right vertical menu inverted sidebar" th:fragment="sidebar">
+		<div class="item" th:if="${user == null}">
+			<div class="header">Welcome</div>
+			<div class="menu">
+				<a class="item" href="/user/register/"><i class="key icon"></i>Register</a>
+				<a class="item" href="/user/login/"><i class="sign in alternate icon"></i>Sign In</a>
+			</div>
+		</div>
+
+		<div class="item" th:if="${user != null}">
+			<div class="header">
+				<img class="ui image avatar" th:src="@{|/image/${user.avatarId}}" />
+				<span th:text="${user.username}"></span>
+				<span th:if="${user.name} != null and ${#strings.length(user.name)} > 0" th:text="'(' + ${user.name} + ')'"></span>
+				</div>
+
+				<div class="menu">
+					<a class="item" href="/user/"><i class="user icon"></i>User Control Panel</a>
+					<a class="item" href="/user/my-pages/"><i class="box icon"></i>My Pages</a>
+					<form method="POST" action="/user/logout/" id="logoutForm"></form>
+					<a href="#" class="item" onclick="document.getElementById('logoutForm').submit()"> <i class="sign out alternate icon"></i>Sign Out </a>
+				</div>
+			</div>
+
+			<a class="item" href="/search/"><i class="search icon"></i>Advanced Search</a>
+			<a class="item" href="/create/" th:if="${user != null}"><i class="green plus circle icon"></i>Create New Store Page</a>
+
+			<div class="item" th:if="${user} != null and ${user.administrator}">
+				<div class="header"><i class="red shield alternate icon"></i>Staff</div>
+				<div class="menu">
+					<a class="item" href="/admin/"><i class="clipboard list icon"></i>Control Panel</a>
+					<a class="item" href="/admin/pages/"><i class="box icon"></i>Page Moderation</a>
+					<a class="item" href="/admin/users/"><i class="user icon"></i>Users</a>
+				</div>
+			</div>
+
+			<div class="item">
+				<div class="header"><i class="green download icon"></i>Download</div>
+				<div class="menu">
+					<a class="item" target="_blank" href="https://github.com/jMonkeyEngine/jmonkeyengine/releases"><i class="github icon"></i>Get the Engine</a>
+					<a class="item" target="_blank" href="https://github.com/jMonkeyEngine/sdk/releases"
+						><i class="window maximize outline icon"></i>Get the SDK</a
+					>
+				</div>
+			</div>
+
+			<div class="item">
+				<div class="header"><i class="external alternate icon"></i>Related</div>
+				<div class="menu">
+					<a class="item" href="https://hub.jmonkeyengine.org"><i class="yellow discourse icon"></i>Community Hub</a>
+					<a class="item" target="_blank" href="https://www.patreon.com/jayfella"><i class="patreon orange icon"></i>Become a Patron</a>
+				</div>
+			</div>
+
+			<a class="item" href="#" id="closeSideMenuButton"><i class="red close icon"></i>Close Menu</a>
+		</div>
+	</body>
+</html>

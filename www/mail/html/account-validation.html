@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:remove="all">Template for HTML email with inline image</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<p th:inline="text">
+			Hi [[${username}]].
+		</p>
+
+		<p>
+			You have recieved this message because you have requested an account validation email.<br />
+			You have requested the following change: [[${changeType}]]
+		</p>
+
+		<p th:if="${changeType == 'Email'}">
+			The request wants to change your email address to: [[${newEmail}]]
+		</p>
+
+		<p><b>Your validation code is: </b> [[${validationCode}]]</p>
+
+		<p>To enter this code, navigate to the <b>User Control Panel</b> manually, or click the link below.</p>
+
+		<p>
+			<a href="https://jmonkeystore.com/user/">https://jmonkeystore.com/user/</a>
+		</p>
+
+		<p>
+			Regards, <br />
+			The JmonkeyStore Team
+		</p>
+	</body>
+</html>

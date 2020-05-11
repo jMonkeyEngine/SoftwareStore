@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Edit Page</title>
+
+	<link rel="stylesheet" type="text/css" href="/css/edit-page.css" />
+
+	<script src="/js/edit-page.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<input type="hidden" id="pageId" th:value="${pageId}" />
+		<input type="hidden" id="pageState" th:value="${pageState}" />
+
+		<!-- Floating Bar -->
+		<div id="floatingBar">
+			<div class="ui circular raised segment" style="padding: 10px !important;">
+				<button class="ui circular green icon button tooltip" v-if="page.reviewState != null && page.reviewState != 'Under_Review'" id="saveButton" data-content="Save Changes" v-on:click="updatePage()">
+					<i class="save icon"></i>
+				</button>
+
+				<button id="previewButton" v-on:click="previewPage()" target="_blank" class="ui circular icon blue button tooltip" data-content="Preview">
+					<i class="search icon"></i>
+				</button>
+			</div>
+		</div>
+		<!-- END Floating Bar -->
+
+		<!-- Under Review Notification -->
+		<div class="ui message visible" v-if="page.reviewState != null && ( page.reviewState == 'Review_Requested' || page.reviewState == 'Under_Review' )">
+			<h2 class="ui dividing header">{{ page.details.title }}</h2>
+			<h4><i class="angle double right icon"></i>{{ page.reviewState.replace("_", " ") }}</h4>
+
+			<p v-if="page.reviewState == 'Review_Requested'">
+				This page us currently waiting to be reviewed by a member of staff. During this period your page cannot be modified. Once a member of staff
+				has been assigned to review your page you will be notified via email. This process may take up to 48 hours some during busy periods of high
+				submissions.
+			</p>
+
+			<p v-if="page.reviewState == 'Under_Review'">
+				This page is currently under Review by a member of staff. During this period your page <b>cannot be modified</b>. Once a member of staff has
+				reviewed your submission <b>you will recieve an email notifying you of the outcome</b>. If your submission is accepted it will automatically
+				become live on the store. If your submission is unsuccessful the email will contain details to help you make the necessary changes and the
+				page will become editable. This information will also be available in <a href="/user/my-pages">My Pages</a>.
+			</p>
+		</div>
+		<!-- END: Under Review Notification -->
+
+		<form class="ui form" id="form" v-if="page.details != null && (page.reviewState == 'None' || page.reviewState == 'Rejected')">
+			<input type="hidden" name="page-id" th:value="${pageId}" />
+
+			<h1 class="ui dividing center aligned header">
+				<span v-if="pageState == 'draft'">Draft Editor</span>
+				<span v-if="pageState == 'amendment'">Amendment Editor</span>
+			</h1>
+
+			<div class="ui black raised padded circular segment">
+				You can resume editing this store page by visiting <a href="/user/my-pages/">My Pages</a> page at any time. There is no time limit. You can
+				save any changes made at any time, however all fields marked with a red asterisk (<span style="color: #db2828">*</span>) <b>must</b> be
+				filled before your software will be submitted for approval.
+			</div>
+
+			<br />
+			<br />
+
+			<!-- Details -->
+			<div>
+				<h2 class="ui header">Details</h2>
+				<p>
+					Provide all details necessary for the user to understand what your software does. This information will be shown in various forms in the
+					store. It is important that you describe your software effectively so the user understands exactly what this software does and why they
+					should use it.
+				</p>
+
+				<br />
+
+				<table class="ui very basic striped celled table">
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Page Title</label></div>
+						</td>
+						<td>
+							<p>Choose a title for your software. Use Title Case text formatting.</p>
+							<div class="ui fitted segment">
+								<div class="right aligned floating ui blue label tooltip" data-content="Minimum Length: 6" data-variation="mini">
+									<span id="titleCount"></span>&nbsp;&nbsp;/&nbsp;&nbsp;64
+								</div>
+								<input id="titleInput" type="text" name="title" :value="page.details.title" v-on:keyup="titleKeyUp($event)" maxlength="64" />
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Short Description</label></div>
+						</td>
+						<td>
+							<p>
+								The short description will appear in most places where your software is shown and should provide a brief description of what
+								this software achieves.
+							</p>
+							<div class="ui fitted segment">
+								<div class="right aligned floating ui blue label tooltip" data-content="Minimum Length: 10" data-variation="mini">
+									<span id="shortDescCount"></span>&nbsp;&nbsp;/&nbsp;&nbsp;255
+								</div>
+								<textarea v-on:keyup="shortDescKeyUp()" id="shortDescTextArea" rows="2" name="short-description" maxlength="255">{{
+										page.details.shortDescription
+									}}</textarea>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Description</label></div>
+						</td>
+						<td>
+							<p>
+								<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown</a>
+								allowed. Provide an in-depth explanation of what your software does. You may provide basic instruction on how to use your
+								software if required.<br />
+								If your software requires extensive documentation you must provide a documentation website. Extensive documentation in the
+								description is forbidden and <b>may result in your page being rejected</b>.
+							</p>
+
+							<div class="ui fitted segment">
+								<div class="right aligned floating ui blue label tooltip" data-content="Minimum Length: 50" data-variation="mini">
+									<span id="longDescCount"></span>&nbsp;&nbsp;/&nbsp;&nbsp;10,000
+								</div>
+								<textarea v-on:keyup="longDescKeyUp()" rows="20" id="descriptionTextArea" name="description" maxlength="10000">{{
+										page.details.description
+									}}</textarea>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<div class="required field"><label>Category</label></div>
+						</td>
+						<td>
+							<div class="ui fluid selection dropdown">
+								<input type="hidden" name="category" :value="page.categoryId" />
+								<i class="dropdown icon"></i>
+								<div class="text"></div>
+								<div class="menu">
+									<div class="item" th:each="category : ${categories}" th:if="${category.parent != null}" th:data-value="${category.id}" th:text="${category.parent.name + ' > ' + category.name}"></div>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">Tags</td>
+						<td>
+							<p>
+								Tags are words or short phrases that describe the content of your software. They help by supporting searches and similar
+								products and increase the likelihood of your page being viewed. Type your tag and press the <b>return key</b> at add it.
+							</p>
+
+							<select name="tags" multiple="" class="ui fluid search selection multiple" id="tagsDropdown" data-value="value">
+								<option v-for="tag in page.details.tags.split(',')" :value="tag" selected>{{ tag }}</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- END: Details -->
+
+			<br />
+			<div class="ui divider"></div>
+			<br />
+
+			<!-- Version Data -->
+			<div>
+				<h2 class="ui header">Version Information</h2>
+
+				<p>
+					Version data helps users to understand when the software has been updated and what state the software is in. Alpha and Beta software is
+					deemed less stable than Release software. In addition you may also specify specific versions of jMonkeyEngine that your software is
+					compatible with.
+				</p>
+
+				<br />
+
+				<table class="ui very basic striped celled table">
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Version</label></div>
+						</td>
+						<td>
+							<p>
+								Provide the version number of the product. As a general rule version numbers follow
+								<a href="https://semver.org/">Semantic Versioning</a>.
+							</p>
+
+							<p>
+								Given a version number MAJOR.MINOR.PATCH, increment the:
+							</p>
+
+							<ul>
+								<li>MAJOR version when you make incompatible API changes.</li>
+								<li>MINOR version when you add functionality in a backwards-compatible manner.</li>
+								<li>and PATCH version when you make backwards-compatible bug fixes</li>
+							</ul>
+
+							<div class="ui labeled input">
+								<div class="ui label">
+									v
+								</div>
+								<input type="text" placeholder="1.0.0" name="versiondata-version" :value="page.versionData.version" />
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>State</label></div>
+						</td>
+						<td>
+							<p>
+								Alpha releases are <i>very</i> early versions of the next major update. Beta releases are early versions of the next major
+								update. Releases are considered stable and useable in production.
+							</p>
+							<div class="ui selection dropdown">
+								<input type="hidden" name="versiondata-state" />
+								<i class="dropdown icon"></i>
+								<div class="text">
+									{{ page.versionData.state }}
+								</div>
+								<div class="menu">
+									<div class="item">Alpha</div>
+									<div class="item">Beta</div>
+									<div class="item">Release</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">Engine Version</td>
+						<td>
+							<p>
+								Specify which version(s) of jMonkeyEngine that this software is compatible with. If you do not specify a version then
+								<b>3.1 and above</b> will be displayed.
+							</p>
+							<input type="text" name="versiondata-enginecompatibility" :value="page.versionData.engineCompatibility" placeholder="3.1 and above" maxlength="255" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- END: Version Data -->
+
+			<br />
+			<div class="ui divider"></div>
+			<br />
+
+			<!-- Build Data -->
+			<div>
+				<h2 class="ui header">Build Information</h2>
+
+				<p>
+					This section defines how the gradle data is generated for the end-user. You have the option of specifying custom repositories,
+					dependencies and store dependencies. This data will be used to generate gradle build information.
+				</p>
+
+				<br />
+
+				<table class="ui very basic striped celled table">
+					<tr>
+						<td class="collapsing right aligned">
+							Repositories
+						</td>
+						<td>
+							<p>
+								Specify any repositories that your software will require to compile. Use the buttons below to add common repositories.
+							</p>
+
+							<p>
+								<b>JitPack</b> allows users to publish git repositories as project dependencies completely free. To use jitpack you must
+								obtain the gradle dependency string that it generates. To obtain the dependency string: .
+							</p>
+
+							<ul>
+								<li>Click the <span class="ui yellow text">jitpack</span> button below.</li>
+								<li>
+									Visit the jitpack website with your repository by
+									<a target="_blank" id="jitpackHelperLink" href="#">clicking here</a> or visit
+									<a target="_blank" href="https://jitpack.io">jitpack.io</a> yourself.
+								</li>
+								<li>
+									Choose a version to use. You can use either a release, build, branch or commit.
+								</li>
+								<li>
+									Scroll down to "Step 2. Add the dependency" on the jitpack website and copy the dependency value to the dependencies
+									textbox below.
+								</li>
+							</ul>
+
+							<div class="field">
+								<div class="ui small buttons">
+									<a class="ui black button" @click="addRepo('jcenter()')">jcenter</a>
+									<a class="ui black button" @click="addRepo('mavenCentral()')">mavenCentral</a>
+									<a class="ui black button" @click="addRepo('maven { url \'https://jitpack.io\' }')">jitpack</a>
+									<a class="ui black button" @click="addRepo('')">Custom</a>
+								</div>
+							</div>
+
+							<div class="field" v-for="(repo, index) in page.buildData.repositories.split(',')">
+								<div v-if="index == 0" class="ui input">
+									<input type="text" name="builddata-repositories" :value="repo" v-on:keyup="updateRepo(index, $event)" />
+								</div>
+								<div v-else class="ui action input">
+									<input type="text" name="builddata-repositories" :value="repo" v-on:keyup="updateRepo(index, $event)" />
+									<a class="ui red icon button tooltip" data-content="delete" @click="removeRepo(index)"><i class="ui close icon"></i></a>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">Dependencies</td>
+						<td>
+							<p>
+								If your software or any dependencies are hosted on jcenter, mavenCentral, jitpack or any other dependency host, specify the
+								gradle dependency string here. You may specify the variable <code><span class="ui yellow text">$VERSION</span></code> to use
+								the version from the version information value on this page.
+							</p>
+
+							<div class="field">
+								<div class="ui small buttons">
+									<a class="ui green button" @click="addHostedDependency('')"><i class="plus icon"></i>Add</a>
+								</div>
+							</div>
+
+							<div class="field" v-for="(dependency, index) in page.buildData.hostedDependencies.split(',')">
+								<div v-if="index == 0" class="ui input">
+									<input type="text" name="builddata-hostedependencies" :value="dependency" v-on:keyup="updateHostedDependency(index, $event)" placeholder="gradle dependency string: e.g. implementation com.mycompany:myproduct:1.0" />
+								</div>
+								<div v-else class="ui action input">
+									<input type="text" name="builddata-hostedependencies" :value="dependency" v-on:keyup="updateHostedDependency(index, $event)" placeholder="gradle dependency string: e.g. implementation com.mycompany:myproduct:1.0" />
+									<a class="ui red icon button tooltip" data-content="delete" @click="removeHostedDependency(index)"><i class="ui close icon"></i></a>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">Store Dependencies</td>
+						<td>
+							<p>
+								Specify any required dependencies that are listed on the store. For example: If your software is a GUI skin for a GUI
+								library, specify the store ID for the GUI library. The pages you add here will display your page as an "add-on".
+							</p>
+							<div class="field">
+								<div class="ui small buttons">
+									<a class="ui green button" @click="addStoreDependency('')"><i class="plus icon"></i>Add</a>
+								</div>
+							</div>
+
+							<div class="field" v-for="(dependency, index) in page.buildData.storeDependencies.split(',')">
+								<div v-if="index == 0" class="ui input">
+									<input type="text" name="builddata-storedependencies" :value="dependency" v-on:keyup="updateStoreDependency(index, $event)" placeholder="store id: e.g. 8ba1fac1-8c93-432a-833d-9df8c258d423" />
+								</div>
+								<div v-else class="ui action input">
+									<input type="text" name="builddata-storedependencies" :value="dependency" v-on:keyup="updateStoreDependency(index, $event)" placeholder="store id: e.g. 8ba1fac1-8c93-432a-833d-9df8c258d423" />
+									<a class="ui red icon button tooltip" data-content="delete" @click="removeStoreDependency(index)"><i class="ui close icon"></i></a>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- END: Build Data -->
+
+			<br />
+			<div class="ui divider"></div>
+			<br />
+
+			<!-- Media Links -->
+			<div>
+				<h2 class="ui header">Image and Video Media</h2>
+				<table class="ui very basic striped celled table">
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Images</label></div>
+						</td>
+						<td>
+							<p>
+								Images must have the dimensions of <b>1280x720</b> and be in <b>JPEG</b> format. All other dimensions and formats will be
+								rejected. The first image will be treated as the cover image and will be shown wherever your software is displayed.
+								<b>Images must not contain adult material</b>.
+							</p>
+
+							<div class="three fields" v-for="(r, row) in 3">
+								<div class="field" v-for="(n, index) in 3">
+									<img :id="'sshot_' + getImageIndex(r, n) + '_preview'" class="sshot-img" :class="getArrayLength(page.mediaLinks.imageIds) > getImageIndex(r, n) ? '' : 'hidden-element'"
+										:src="getArrayLength(page.mediaLinks.imageIds) > getImageIndex(r, n) ? '/image/' + page.mediaLinks.imageIds.split(',')[getImageIndex(r, n)] : '#'" />
+									<input :id="'sshot_' + getImageIndex(r, n)" :name="'sshot_' + getImageIndex(r, n)" type="file" accept="image/jpeg" @change="screenshotChanged($event, '#sshot_' + getImageIndex(r, n) + '_preview')"
+										:disabled="getArrayLength(page.mediaLinks.imageIds) > getImageIndex(r, n)" />
+									<i class="times circle outline icon clear-img" :data-index="getImageIndex(r, n)" @click="clearScreenshot($event)"></i>
+									<div class="img-error ui warning message">
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+							<select multiple name="deleted-images" id="deletedImages" style="visibility: hidden; display: none;"> </select>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">
+							Background Image
+						</td>
+						<td>
+							<p>
+								Select an image index that will be used as the background for your store page. <b>Indexes start at zero</b>.
+								Leave the input field blank if you do not want a background image.
+							</p>
+
+							<!--
+							<div class="ui fluid selection dropdown">
+								<input type="hidden" name="category" :value="page.categoryId" />
+								<i class="dropdown icon"></i>
+								<div class="text"></div>
+								<div class="menu">
+									<div class="item" th:each="category : ${categories}" th:if="${category.parent != null}" th:data-value="${category.id}" th:text="${category.parent.name + ' > ' + category.name}"></div>
+								</div>
+							</div>
+							-->
+
+							<div class="ui selection dropdown">
+								<input type="hidden" name="backgroundImageIndex" :value="getBackgroundImageIndex(page.mediaLinks.backgroundImageIndex)" />
+								<i class="dropdown icon"></i>
+								<div class="text"></div>
+								<div class="menu">
+									<div class="item" v-for="(n, index) in 9" :data-value="index">Image {{ n }}</div>
+									<div class="item" :data-value="9">No Background</div>
+								</div>
+							</div>
+
+						</td>
+					</tr>
+
+
+					<tr>
+						<td class="collapsing right aligned">Videos</td>
+						<td>
+							<p>
+								Showcase your software with videos. Specify the <b>ID</b> of a <b>public</b> youtube video. A maximum of 3 videos may be
+								submitted. Please ensure <b>no adult material or language</b> is recorded.
+							</p>
+							<div class="three fields">
+								<div class="field">
+									<input id="video-1" name="medialinks-youtubevideo" type="text" placeholder="youtube-id" :value="page.mediaLinks.videoIds.split(',').length > 0 ? page.mediaLinks.videoIds.split(',')[0] : ''" />
+								</div>
+
+								<div class="field">
+									<input id="video-2" name="medialinks-youtubevideo" type="text" placeholder="youtube-id" :value="page.mediaLinks.videoIds.split(',').length > 1 ? page.mediaLinks.videoIds.split(',')[1] : ''" />
+								</div>
+								<div class="field">
+									<input id="video-3" name="medialinks-youtubevideo" type="text" placeholder="youtube-id" :value="page.mediaLinks.videoIds.split(',').length > 2 ? page.mediaLinks.videoIds.split(',')[2] : ''" />
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- END: Media Links -->
+
+			<br />
+			<div class="ui divider"></div>
+			<br />
+
+			<!-- External Links -->
+			<div>
+				<h2 class="ui header">External Links</h2>
+				<table class="ui very basic striped celled table">
+					<tr>
+						<td class="collapsing right aligned">Documentation</td>
+						<td>
+							<p>
+								Documentation is not required but is highly encouraged.
+							</p>
+							<input type="text" name="externallinks-documentation" placeholder="https://www.mysite.com/mysoftware/docs/" :value="page.externalLinks.docsWebsite" />
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">Publisher</td>
+						<td>
+							<p>
+								A publisher website is not required but is highly encouraged.
+							</p>
+							<input type="text" name="externallinks-publishersite" placeholder="https://www.mysite.com" :value="page.externalLinks.publisherWebsite" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- END: External Links -->
+
+			<!-- Open Source Data -->
+			<div v-if="page.softwareType == 'OpenSource' || page.softwareType == 'Sponsored'">
+				<br />
+				<div class="ui divider"></div>
+				<br />
+
+				<h2 class="ui header">Open Source Data</h2>
+				<p>
+					Licenses determine what others can do with your software. If you're having trouble deciding which license to use, give our
+					<a href="/legal/license/opensource/" target="_blank">OpenSource License chooser</a> a try.
+				</p>
+				<table class="ui very basic celled striped table">
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Git Repository</label></div>
+						</td>
+						<td>
+							<p>
+								Specify the git repository that contains the source code of your work. Your repository must be hosted on either
+								<i class="github icon"></i><a href="https://github.com" target="_blank">GitHub</a>, <i class="bitbucket icon"></i><a href="https://bitbucket.org" target="_blank">BitBucket</a> or <i class="gitlab icon"></i><a href="https://gitlab.com"
+									target="_blank">GitLab</a>.
+							</p>
+							<div class="ui fluid input">
+								<input type="text" name="opensource-git-repo" :value="page.openSourceData.gitRepository" />
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">Forked Repository</td>
+						<td>
+							<div class="ui checkbox">
+								<input type="checkbox" name="opensource-forked" v-model="page.openSourceData.fork" />
+								<label>This project is a fork of another repository</label>
+							</div>
+						</td>
+					</tr>
+
+					<tr v-if="page.openSourceData.fork">
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Fork</label></div>
+						</td>
+						<td>
+							<div class="ui fluid input">
+								<input type="text" name="opensource-fork-repo" :value="page.openSourceData.forkRepository" placeholder="e.g. https://github.com/jMonkeyEngine/jmonkeyengine" />
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Software License</label></div>
+						</td>
+						<td>
+							<p>
+								Determines what others can do with your source code.
+							</p>
+							<div class="ui fluid selection dropdown">
+								<input type="hidden" name="opensource-softwarelicense" />
+								<i class="dropdown icon"></i>
+								<div class="text">
+									{{ page.openSourceData.softwareLicense == null ? "Select a License" : page.openSourceData.softwareLicense.name }}
+								</div>
+								<div class="menu">
+									<div class="item" th:each="license : ${softwareLicenses}" th:text="${license.name}"></div>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned">
+							<div class="required field"><label>Media License</label></div>
+						</td>
+						<td>
+							<p>
+								Determines what others can do with your images, models, sounds and any other file that is not deemed source-code.
+							</p>
+							<div class="ui fluid selection dropdown">
+								<input type="hidden" name="opensource-medialicense" />
+								<div class="text">
+									{{ page.openSourceData.mediaLicense == null ? "Select a License" : page.openSourceData.mediaLicense.name }}
+								</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									<div class="item" th:each="license : ${mediaLicenses}" th:text="${license.name}" th:data-value="${license.name}"></div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+				<br />
+				<div class="ui divider"></div>
+				<br />
+			</div>
+			<!-- END: Open Source Data -->
+
+			<!-- Price -->
+			<div v-if="page.softwareType == 'Sponsored' || page.softwareType == 'Paid'">
+				<h2 v-if="page.softwareType == 'Paid'" class="ui header">Software Price</h2>
+				<h2 v-else class="ui header">Sponsor Price</h2>
+
+				<p v-if="page.softwareType == 'Paid'">
+					The price of your software in United States Dollars (USD) that users must pay to obtain a copy of your software.
+				</p>
+				<p v-else>
+					The price users may sponsor you if they wish.
+				</p>
+
+				<div class="field">
+					<div class="ui labeled input">
+						<div class="ui label">$</div>
+						<input type="text" name="paymentdata-price" placeholder="5.00" :value="page.paymentData.price.toFixed(2)" />
+					</div>
+				</div>
+
+				<br />
+				<div class="ui divider"></div>
+				<br />
+			</div>
+			<!-- END: Price -->
+		</form>
+
+		<!-- Submit Page -->
+
+		<div v-if="page.details != null && (page.reviewState == 'None' || page.reviewState == 'Rejected')">
+			<h2 class="ui header">Save & Preview</h2>
+			<p>
+				Save your changes or preview your page. Your preview will mark areas in <span class="ui red text">red</span> for areas that are required.
+				<b>Hint:</b> You can also use the floating save/preview buttons located at the bottom-right of your screen.
+			</p>
+
+			<button class="ui green button" v-on:click="updatePage()">Save Changes</button>
+			<button class="ui blue button" v-on:click="previewPage()">Preview Your Page</button>
+
+			<br />
+			<div class="ui divider"></div>
+			<br />
+
+			<div v-if="page.reviewState != null && !page.reviewState !== 'Under_Review'">
+				<h1 class="ui header">Submit Your Store Page For Review</h1>
+				<p>
+					When you are sure that your page is ready to be reviewed you may submit it. The content will be reviewed by a member of staff to ensure
+					your page has complied with our <a href="#">Terms of Service</a> and <a href="#">Submission Rules</a>. After pageReview you will recieve
+					an email describing the outcome of the pageReview.
+				</p>
+
+				<div class="ui warning message">
+					<i class="exclamation triangle icon"></i>
+					Please ensure that you have <b>saved any changes</b> you have made by clicking the save button before submitting your page for approval.
+				</div>
+
+				<form class="ui form" id="submitPageForm">
+					<input type="hidden" th:value="${pageId}" name="pageId" />
+				</form>
+				<button class="ui labeled icon button black" :disabled="page.staffReview != null && page.reviewState == 'Under_Review'" v-on:click="saveAndSubmitPage()">
+					<i class="arrow right icon"></i>Submit Page for Review
+				</button>
+			</div>
+			<!-- END: Submit Asset -->
+		</div>
+		<div v-else>
+			<button class="ui blue button" v-on:click="previewPage()">Preview Your Page</button>
+		</div>
+
+		<br /><br />
+
+	</div>
+</body>
+
+</html>

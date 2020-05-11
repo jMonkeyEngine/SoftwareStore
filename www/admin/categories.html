@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Administrator :: Dashboard</title>
+
+	<script src="/js/admin/page-categories.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h1 class="ui dividing header">Administrator :: Dashboard</h1>
+
+		<div th:replace="fragments/admin/admin-menu :: adminMenu"></div>
+
+		<br />
+
+		<button class="ui small black button" @click="createNewCategory($event)">Add Category</button>
+
+		<div class="ui message" v-if="categories.length == 0">
+			No categories.
+		</div>
+		<div v-else class="ui list">
+			<div class="item" v-for="(category, index) in categories" v-if="category.parent == null">
+				<i class="angle right icon"></i>
+				<div class="content">
+					<!-- text and "edit" button -->
+					<div @mouseenter="mouseEnterCategory($event)" @mouseleave="mouseLeaveCategory($event)">
+						<span @click="editCategory($event)">{{ category.name }}</span>
+						<div class="ui mini icon label transition hidden" style="cursor: pointer;" @click="createNewCategory($event, index, category)">
+							<i class="angle down icon"></i>
+						</div>
+						<div class="ui mini icon red label transition hidden" style="cursor: pointer;" data-content="delete" @click="deleteCategory(category, index)">
+							<i class="trash alternate icon"></i>
+						</div>
+					</div>
+
+					<!-- input field to edit name -->
+					<div class="ui mini action input transition hidden" @mouseleave="mouseLeaveCategoryTextField($event)">
+						<input type="text" v-model="category.name" />
+						<button class="ui black icon button" @click="updateSelectedCategory(category, index)"><i class="save outline icon"></i></button>
+					</div>
+
+					<!-- children -->
+					<div class="list" v-if="getChildCount(category) > 0">
+						<div class="item" v-for="(child, chindex) in categories" v-if="child.parent != null && child.parent.id === category.id">
+							<i class="angle right icon"></i>
+							<div class="content">
+								<div @mouseenter="mouseEnterCategory($event)" @mouseleave="mouseLeaveCategory($event)">
+									<span @click="editCategory($event)">{{ child.name }}</span>
+
+									<div class="ui mini icon red label transition hidden" style="cursor: pointer;" data-content="delete" @click="deleteCategory(child, chindex)">
+										<i class="trash alternate icon"></i>
+									</div>
+								</div>
+
+								<!-- input field to edit name -->
+								<div class="ui mini action input transition hidden" @mouseleave="mouseLeaveCategoryTextField($event)">
+									<input type="text" v-model="child.name" />
+									<button class="ui black icon button" @click="updateSelectedCategory(child, chindex)">
+										<i class="save outline icon"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<br />
+	</div>
+</body>
+
+</html>

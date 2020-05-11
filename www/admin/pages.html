@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Store Pages :: Administration</title>
+
+	<script type="text/javascript" src="/js/admin/page-pages.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" id="app">
+		<input type="hidden" id="userId" th:value="${user.id}" />
+
+		<div class="ui container">
+			<br />
+
+			<h1 class="ui dividing header">Administrator :: Store Pages</h1>
+
+			<div th:replace="fragments/admin/admin-menu :: adminMenu"></div>
+
+			<!-- START : Draft Pages -->
+			<h2>Draft Pages</h2>
+			<div>
+				<div class="ui message" v-if="drafts.length == 0">
+					There are no Draft Pages awaiting approval at this time.
+				</div>
+
+				<table class="ui small compact fluid orange celled table" v-if="drafts.length > 0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Creator</th>
+							<th>Created</th>
+							<th>Last Edited</th>
+							<th>Status</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr v-for="(draft, index) in drafts" :class="draft.reviewState == 'Review_Requested' ? 'positive' : ''">
+							<td>
+								<a :href="'/preview/draft/' + draft.id" target="_blank" data-content="View" data-variation="mini">{{
+										draft.details.title
+									}}</a>
+							</td>
+
+							<td class="collapsing">{{ draft.softwareType }}</td>
+
+							<td class="collapsing">{{ draft.owner.username }}</td>
+
+							<td class="collapsing">{{ millisToDate(draft.dateCreated) }}</td>
+
+							<td class="collapsing">
+								{{ millisToDate(draft.dateUpdated) }}
+							</td>
+
+							<td class="collapsing">
+								<i class="exclamation circle icon" v-if="draft.reviewState == 'Review_Requested'"></i>
+								<i class="question circle outline icon" v-if="draft.reviewState == 'Under_Review'"></i>
+								<span class="tooltip" :data-content="draft.reviewer != null ? draft.reviewer.username + ' is reviewing this page' : ''">{{
+										draft.reviewState.replace("_", " ")
+									}}</span>
+							</td>
+
+							<td class="collapsing">
+								<input type="hidden" :value="draft.id" />
+								<input type="hidden" value="opensource" />
+
+								<button v-if="draft.reviewState == 'Review_Requested'" class="ui mini button icon purple tooltip" data-content="Take Job" data-variation="mini" v-on:click="takeJob('draft', draft.id, index)">
+									<i class="thumbs up outline icon"></i>
+								</button>
+
+								<button v-if="draft.reviewState == 'Under_Review' && draft.reviewer.id == userId" class="ui mini button icon green tooltip" data-content="Approve" data-variation="mini" v-on:click="approveDraft(draft.id, index)">
+									<i class="check icon"></i>
+								</button>
+
+								<button v-if="draft.reviewState == 'Under_Review' && draft.reviewer.id == userId" class="ui mini button icon orange tooltip" data-content="Reject" data-variation="mini" v-on:click="rejectDraft(draft.id, index)">
+									<i class="close icon"></i>
+								</button>
+
+								<button class="ui mini button icon red tooltip" data-content="Delete" data-variation="mini" v-on:click="deleteDraft(draft.id, index)">
+									<i class="trash alternate outline icon"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- START: Draft Page reject modal -->
+				<div class="ui large modal" id="RejectDraftModal">
+					<div class="header">Reject Draft</div>
+					<div class="scrolling content">
+						<p>
+							Please explain to the user why the page has been rejected. The contents of your explanation will be sent directly to the user.
+						</p>
+
+						<ul class="ui list">
+							<li>Be as specific as possible.</li>
+							<li>Explain how the problem may be resolved.</li>
+						</ul>
+
+						<div class="ui form">
+							<div class="field">
+								<textarea id="RejectDraftReason" cols="10"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="actions">
+						<div class="ui black cancel button">Cancel</div>
+						<button class="ui red ok button"><i class="trash alternate outline icon"></i>Reject Draft</button>
+					</div>
+				</div>
+				<!-- END: Draft Page reject modal -->
+
+				<!-- START: Draft Page delete confirmation modal -->
+				<div class="ui small modal" id="DeleteDraftModal">
+					<div class="header">Delete Draft Page</div>
+					<div class="content">Are you sure you want to <b>permanently delete</b> this draft page? This action cannot be reversed.</div>
+					<div class="actions">
+						<div class="ui cancel green button">Cancel</div>
+						<div class="ui red ok button"><i class="trash alternate outline icon"></i>Delete Draft Page</div>
+					</div>
+				</div>
+				<!-- END: Draft Page delete confirmation modal -->
+			</div>
+			<!-- END : Draft Pages -->
+
+			<!-- START : Live Page Amendments -->
+			<h2>Live Page Amendments</h2>
+			<div>
+				<div class="ui message" v-if="amendments.length == 0">
+					There are no live page amendments awaiting approval at this time.
+				</div>
+
+				<table class="ui small compact fluid blue celled table" v-if="amendments.length > 0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Creator</th>
+							<th>Created</th>
+							<th>Last Edited</th>
+							<th>Status</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr v-for="(amendment, index) in amendments" :class="amendment.reviewState == 'Review_Requested' ? 'positive' : ''">
+							<td>
+								<a :href="'/preview/amendment/opensource/' + amendment.id" target="_blank" data-content="View" data-variation="mini">{{
+										amendment.details.title
+									}}</a>
+							</td>
+
+							<td class="collapsing">{{ amendment.softwareType }}</td>
+
+							<td class="collapsing">{{ amendment.owner.username }}</td>
+
+							<td class="collapsing">{{ millisToDate(amendment.dateCreated) }}</td>
+
+							<td class="collapsing">
+								{{ millisToDate(amendment.dateUpdated) }}
+							</td>
+
+							<td class="collapsing">
+								<i class="exclamation circle icon" v-if="amendment.reviewState == 'Review_Requested'"></i>
+								<i class="question circle outline icon" v-if="amendment.reviewState == 'Under_Review'"></i>
+								<span class="tooltip" :data-content="amendment.reviewer != null ? amendment.reviewer.username + ' is reviewing this page' : ''">{{ amendment.reviewState.replace("_", " ") }}</span>
+							</td>
+
+							<td class="collapsing">
+								<button v-if="amendment.reviewState == 'Review_Requested'" class="ui mini button icon purple tooltip" data-content="Take Job" data-variation="mini" v-on:click="takeJob('amendment', amendment.id, index)">
+									<i class="thumbs up outline icon"></i>
+								</button>
+
+								<button v-if="amendment.reviewState == 'Under_Review' && amendment.reviewer.id == userId" class="ui mini button icon green tooltip" data-content="Approve" data-variation="mini" v-on:click="approveAmendment(amendment.id, index)">
+									<i class="check icon"></i>
+								</button>
+
+								<button v-if="amendment.reviewer" class="ui mini button icon orange tooltip" data-content="Reject" data-variation="mini" v-on:click="rejectAmendment(amendment.id, index)">
+									<i class="close icon"></i>
+								</button>
+
+								<button class="ui mini button icon red tooltip" data-content="Delete" data-variation="mini" v-on:click="deleteAmendment(amendment.id, index)">
+									<i class="trash alternate outline icon"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- START: Amendment delete confirmation modal -->
+				<div class="ui small modal" id="DeleteAmendmentModal">
+					<div class="header">Delete Amendment</div>
+					<div class="content">Are you sure you want to <b>permanently delete</b> this amendment? This action cannot be reversed.</div>
+					<div class="actions">
+						<div class="ui cancel green button">Cancel</div>
+						<div class="ui red ok button"><i class="trash alternate outline icon"></i>Delete Amendment</div>
+					</div>
+				</div>
+				<!-- END: Amendment delete confirmation modal -->
+
+				<!-- START: Amendment rejection modal -->
+				<div class="ui modal" id="rejectAmendmentModal">
+					<i class="close icon"></i>
+					<div class="header">
+						Reject Amendment
+					</div>
+					<div class="content">
+						<p>
+							Please explain to the user why the page amendment has been rejected. The contents of your explanation will be sent directly to
+							the user.
+						</p>
+
+						<ul class="ui list">
+							<li>Be as specific as possible.</li>
+							<li>Explain how the problem may be resolved.</li>
+						</ul>
+
+						<div class="ui form">
+							<textarea cols="5" id="RejectAmendmentReason"></textarea>
+						</div>
+					</div>
+					<div class="actions">
+						<div class="ui black cancel button">Cancel</div>
+						<div class="ui red ok button"><i class="trash alternate outline icon"></i>Reject Amendment</div>
+					</div>
+				</div>
+				<!-- END: Amendment rejection modal -->
+			</div>
+			<!-- END : Live Page Amendments -->
+
+			<!-- START : Live Pages -->
+			<h2>Live Pages</h2>
+			<div>
+				<div class="ui fluid action input">
+					<input id="searchPagesInput" type="text" placeholder="Search..." v-on:keyup.enter="searchPages()" />
+
+					<div class="ui black button" @click="searchPages()">Search</div>
+				</div>
+
+				<div class="ui message" v-if="page_search_results != null && page_search_results.length == 0"></div>
+
+				<table class="ui small compact fluid celled table" v-if="page_search_results != null && page_search_results.length > 0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Author</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tr v-for="(page, index) in page_search_results">
+						<td class="collapsing">
+							<a :href="'/' + page.id">{{ page.details.title }}</a>
+						</td>
+						<td>
+							{{ page.owner.username }}
+						</td>
+						<td class="collapsing">
+							<button @click="deleteLivePage(page.id, index)" class="ui mini button icon red tooltip" data-content="Delete" data-variation="mini">
+								<i class="trash alternate outline icon"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+
+				<!-- START: page delete confirmation modal -->
+				<div class="ui small modal" id="deleteLivePageModal">
+					<div class="header">Delete Live Page</div>
+					<div class="content">Are you sure you want to <b>permanently delete</b> this <b>LIVE PAGE</b>? This action cannot be reversed.</div>
+					<div class="actions">
+						<div class="ui cancel green button">Cancel</div>
+						<div class="ui red ok button"><i class="trash alternate outline icon"></i>PERMANENTLY DELETE LIVE PAGE</div>
+					</div>
+				</div>
+				<!-- END: page delete confirmation modal -->
+			</div>
+			<!-- END : Live pages -->
+
+			<br /><br />
+		</div>
+	</div>
+</body>
+
+</html>

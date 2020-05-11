@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Login</title>
+
+		<script src="/js/user/login.js"></script>
+	</head>
+	<body>
+		<div layout:fragment="content" class="ui container">
+			<br />
+
+			<div th:if="${user != null}" class="ui message">
+				You are already logged in.
+			</div>
+
+			<div th:if="${user == null}">
+				<div class="ui center aligned grid">
+					<div class="row">
+						<div class="six wide column">
+							<br />
+							<h2 class="ui teal image header">
+								<img src="/images/logo-icon.jpg" class="image" />
+								<div class="content">
+									Log-in to your account
+								</div>
+							</h2>
+							<form class="ui form" action="/user/login/" method="post" id="loginForm">
+								<div class="ui segment">
+									<div class="field">
+										<div class="ui left icon input">
+											<i class="user icon"></i>
+											<input type="text" name="username" placeholder="Username" />
+										</div>
+									</div>
+
+									<div class="field">
+										<div class="ui left icon input">
+											<i class="lock icon"></i>
+											<input name="password" type="password" placeholder="Password" />
+										</div>
+									</div>
+
+									<div class="ui fluid large green submit button">Login</div>
+								</div>
+
+								<div class="ui error message"></div>
+							</form>
+
+							<div class="ui message"><a href="/user/register/">Sign Up</a> &bull; <a href="/user/reset-password/">Reset Password</a></div>
+
+							<div class="ui error message" th:if="${error}">
+								<ul>
+									<li th:each="msg : ${error}" th:text="${msg}"></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

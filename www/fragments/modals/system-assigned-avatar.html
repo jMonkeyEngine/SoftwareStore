@@ -1,0 +1,66 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<div class="ui modal tiny" id="systemAssignedAvatarModal" th:fragment="systemAssignedAvatar">
+			<div class="header"><i class="user circle outline icon"></i>Use System Assigned Avatar</div>
+
+			<div class="ui content">
+				<div class="ui two column grid">
+					<div class="row">
+						<div class="column">
+							<table class="ui compact very basic table">
+								<tbody>
+									<tr>
+										<td class="collapsing nolines">
+											<div id="backgroundColorSelector" class="colorSelector"><div style="background-color: #f0e9e9"></div></div>
+										</td>
+										<td class="collapsing nolines">Background</td>
+									</tr>
+
+									<tr>
+										<td class="collapsing nolines">
+											<div id="fontColorSelector" class="colorSelector"><div style="background-color: #8b5d5d"></div></div>
+										</td>
+										<td class="collapsing nolines">Foreground</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<div class="ui compact grid">
+								<div class="row">
+									<div class="ui toggle checkbox">
+										<input id="uppercaseSystemAvatar" type="checkbox" />
+										<label>Uppercase</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="ui toggle checkbox"><input id="boldSystemAvatar" type="checkbox" /><label>Bold</label></div>
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<img id="systemAssignedPreview" class="ui image" v-if="user.avatarId" v-bind:src="'/image/' + user.avatarId" />
+							<br />
+							<button v-on:click="updateSystemAssignedAvatar()" class="ui button">Preview Changes</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="ui divider"></div>
+				<p>Generated using <a href="https://ui-avatars.com/">UI-Avatars</a></p>
+			</div>
+
+			<div class="actions">
+				<div class="ui red cancel button">
+					<i class="remove icon"></i>
+					Cancel
+				</div>
+
+				<div class="ui green ok button">
+					<i class="check icon"></i>
+					Save Changes
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

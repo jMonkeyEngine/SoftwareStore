@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Administrator :: Dashboard</title>
+
+	<script src="/js/admin/page-index.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h1 class="ui dividing header">Administrator :: Dashboard</h1>
+
+		<div th:replace="fragments/admin/admin-menu :: adminMenu"></div>
+
+		<br />
+		<p>There are a total of <span class="ui yellow text" th:text="${userCount}"></span> registered users.</p>
+
+		<div class="ui divider"></div>
+
+		<div>
+			<div class="ui two column grid">
+				<div class="row">
+					<div class="column">
+						<table class="ui small compact fluid red celled table">
+							<thead>
+								<tr>
+									<th class="right aligned">Page</th>
+									<th>Count</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td class="collapsing right aligned">Open Source Software</td>
+									<td th:text="${opensourceCount}"></td>
+								</tr>
+								<tr>
+									<td class="collapsing right aligned">Sponsored Software</td>
+									<td th:text="${sponsoredCount}"></td>
+								</tr>
+								<tr>
+									<td class="collapsing right aligned">Paid Software</td>
+									<td th:text="${paidCount}"></td>
+								</tr>
+
+								<tr class="black">
+									<td class="collapsing right aligned">Total</td>
+									<td th:text="${opensourceCount} + ${sponsoredCount} + ${paidCount}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="column">
+						<table class="ui small compact fluid red celled table">
+							<thead>
+								<tr>
+									<th class="right aligned">Page</th>
+									<th>Count</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td class="collapsing right aligned">Open Drafts</td>
+									<td th:text="${draftCount}"></td>
+								</tr>
+
+								<tr>
+									<td class="collapsing right aligned">Open Amendments</td>
+									<td th:text="${amendmentCount}"></td>
+								</tr>
+
+								<tr class="black">
+									<td class="collapsing right aligned">Total</td>
+									<td th:text="${draftCount} + ${amendmentCount}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br /><br />
+	</div>
+</body>
+
+</html>

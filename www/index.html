@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Home</title>
+
+	<link rel="stylesheet" href="/css/store-index.css" />
+
+	<script type="text/javascript" src="/libs/vue-carousel/0.2.0/vue-carousel-3d.min.js"></script>
+	<script type="text/javascript" src="/js/test.js" defer></script>
+
+</head>
+
+<body>
+	<div layout:fragment="content" id="app">
+
+		<div class="ui active dimmer" id="pageLoader">
+			<div class="ui text blue elastic loader">Loading</div>
+		</div>
+
+		<br /><br />
+
+
+		<div v-if="assets.showcase && assets.showcase.length > 0" class="main-carousel">
+
+			<br /><br />
+
+			<carousel-3d :count="assets.showcase.length" :visible="10" :width="720" :height="360" :border="1" :controls-visible="true" :controls-prev-html="'&#10092;'" :controls-next-html="'&#10093;'" :clickable="false" :perspective="20" :space="400">
+
+				<slide v-for="(asset, i) in assets.showcase" :index="i">
+					<img :src="'/image/' + asset.mediaLinks.imageIds.split(',')[0]">
+
+					<rating>
+						<div class="ui large star rating disabled">
+							<i class="star icon" :class="asset.rating.averageRating >= 1 ? 'yellow' : 'grey'"></i>
+							<i class="star icon" :class="asset.rating.averageRating >= 2 ? 'yellow' : 'grey'"></i>
+							<i class="star icon" :class="asset.rating.averageRating >= 3 ? 'yellow' : 'grey'"></i>
+							<i class="star icon" :class="asset.rating.averageRating >= 4 ? 'yellow' : 'grey'"></i>
+							<i class="star icon" :class="asset.rating.averageRating >= 5 ? 'yellow' : 'grey'"></i>
+						</div>
+					</rating>
+
+					<figtitle>
+						<a :href="'/' + asset.id">
+							<h1 class="ui header title">{{ asset.details.title }}</h1>
+						</a>
+					</figtitle>
+
+					<figcaption>
+
+						{{ asset.details.shortDescription }}
+					</figcaption>
+
+				</slide>
+			</carousel-3d>
+
+		</div> <!-- END assets showcase -->
+
+		<div class="ui container">
+
+			<br /><br /><br />
+
+			<div class="ui four item stackable menu">
+				<a class="item" href="#highest_rated"><i class="star icon"></i>Highest Rated</a>
+				<a class="item" href="#new_additions"><i class="plus icon"></i>New Additions</a>
+				<a class="item" href="#recently_updated"><i class="pen icon"></i>Recently Updated</a>
+				<a class="item" href="/search/?author="><i class="list icon"></i>Browse All</a>
+			</div>
+
+			<!-- Highest Rated -->
+			<div v-if="assets.highest_rated && assets.highest_rated.totalElements > 0">
+
+				<br /><br />
+				<a name="highest_rated"></a>
+				<br />
+
+				<div class="ui segments">
+					<div class="ui inverted segment">
+						<h2 class="ui header">
+							Highest Rated
+						</h2>
+					</div>
+					<div class="ui green segment">
+
+						<div class="ui stackable grid">
+							<div class="row" v-for="(row, index) in 5">
+
+								<!-- Left -->
+								<div class="eight wide column">
+
+									<div class="ui green segment">
+
+										<div class="ui grid">
+
+											<div class="eight wide column">
+												<div class="ui rounded fluid bordered image">
+													<img :src="'/image/' + assets.highest_rated.content[index].mediaLinks.imageIds.split(',')[0]">
+												</div>
+											</div>
+
+											<div class="eight wide column">
+
+												<a :href="'/' + assets.highest_rated.content[index].id">
+													<h3 class="ui header">
+														{{ assets.highest_rated.content[index].details.title }}
+													</h3>
+												</a>
+
+												<img class="ui avatar image" :src="'/image/' + assets.highest_rated.content[index].owner.avatarId" />
+												by
+												<a :href="'/user/profile/' + assets.highest_rated.content[index].owner.id">
+													{{ assets.highest_rated.content[index].owner.username }}
+												</a>
+
+												<p>
+													{{ assets.highest_rated.content[index].details.shortDescription }}
+												</p>
+
+
+												<div class="ui mini star rating ministar disabled">
+													<i class="star icon" :class="assets.highest_rated.content[index].rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index].rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index].rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index].rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index].rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+												</div>
+
+												<div>
+													Rated: {{ assets.highest_rated.content[index].rating.averageRating }} | {{ assets.highest_rated.content[index].rating.ratingCount }} reviews.
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+								<!-- Right -->
+								<div class="eight wide column">
+
+									<div class="ui green segment">
+
+										<div class="ui grid">
+
+											<div class="eight wide column">
+												<div class="ui rounded fluid bordered image">
+													<img :src="'/image/' + assets.highest_rated.content[index + 5].mediaLinks.imageIds.split(',')[0]">
+												</div>
+											</div>
+
+											<div class="eight wide column">
+
+												<a :href="'/' + assets.highest_rated.content[index + 5].id">
+													<h3 class="ui header">
+														{{ assets.highest_rated.content[index + 5].details.title }}
+													</h3>
+												</a>
+
+												<img class="ui avatar image" :src="'/image/' + assets.highest_rated.content[index + 5].owner.avatarId" />
+												by
+												<a :href="'/user/profile/' + assets.highest_rated.content[index + 5].owner.id">
+													{{ assets.highest_rated.content[index + 5].owner.username }}
+												</a>
+
+												<p>
+													{{ assets.highest_rated.content[index + 5].details.shortDescription }}
+												</p>
+
+
+												<div class="ui mini star rating ministar disabled">
+													<i class="star icon" :class="assets.highest_rated.content[index + 5].rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index + 5].rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index + 5].rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index + 5].rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.highest_rated.content[index + 5].rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+												</div>
+
+												<div>
+													Rated: {{ assets.highest_rated.content[index + 5].rating.averageRating }} | {{ assets.highest_rated.content[index + 5].rating.ratingCount }} reviews.
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+
+
+			</div> <!-- END highest rated -->
+
+			<!-- New Additions -->
+			<div v-if="assets.new_additions && assets.new_additions.totalElements > 0">
+
+
+				<br /><br />
+				<a name="new_additions"></a>
+				<br />
+
+				<div class="ui segments">
+					<div class="ui inverted segment">
+						<h2 class="ui header">
+							New Additions
+						</h2>
+					</div>
+					<div class="ui yellow segment">
+
+						<div class="ui stackable grid">
+							<div class="row" v-for="(row, index) in 5">
+
+								<!-- Left -->
+								<div class="eight wide column">
+
+									<div class="ui yellow segment">
+
+										<div class="ui grid">
+
+											<div class="eight wide column">
+												<div class="ui rounded fluid bordered image">
+													<img :src="'/image/' + assets.new_additions.content[index].mediaLinks.imageIds.split(',')[0]">
+												</div>
+											</div>
+
+											<div class="eight wide column">
+
+												<a :href="'/' + assets.new_additions.content[index].id">
+													<h3 class="ui header">
+														{{ assets.new_additions.content[index].details.title }}
+													</h3>
+												</a>
+
+												<img class="ui avatar image" :src="'/image/' + assets.new_additions.content[index].owner.avatarId" />
+												by
+												<a :href="'/user/profile/' + assets.new_additions.content[index].owner.id">
+													{{ assets.new_additions.content[index].owner.username }}
+												</a>
+
+												<p>
+													{{ assets.new_additions.content[index].details.shortDescription }}
+												</p>
+
+
+												<div class="ui mini star rating ministar disabled">
+													<i class="star icon" :class="assets.new_additions.content[index].rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index].rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index].rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index].rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index].rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+												</div>
+
+												<div>
+													Rated: {{ assets.new_additions.content[index].rating.averageRating }} | {{ assets.new_additions.content[index].rating.ratingCount }} reviews.
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+								<!-- Right -->
+								<div class="eight wide column">
+
+									<div class="ui yellow segment">
+
+										<div class="ui grid">
+
+											<div class="eight wide column">
+												<div class="ui rounded fluid bordered image">
+													<img :src="'/image/' + assets.new_additions.content[index + 5].mediaLinks.imageIds.split(',')[0]">
+												</div>
+											</div>
+
+											<div class="eight wide column">
+
+												<a :href="'/' + assets.new_additions.content[index + 5].id">
+													<h3 class="ui header">
+														{{ assets.new_additions.content[index + 5].details.title }}
+													</h3>
+												</a>
+
+												<img class="ui avatar image" :src="'/image/' + assets.new_additions.content[index + 5].owner.avatarId" />
+												by
+												<a :href="'/user/profile/' + assets.new_additions.content[index + 5].owner.id">
+													{{ assets.new_additions.content[index + 5].owner.username }}
+												</a>
+
+												<p>
+													{{ assets.new_additions.content[index + 5].details.shortDescription }}
+												</p>
+
+
+												<div class="ui mini star rating ministar disabled">
+													<i class="star icon" :class="assets.new_additions.content[index + 5].rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index + 5].rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index + 5].rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index + 5].rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.new_additions.content[index + 5].rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+												</div>
+
+												<div>
+													Rated: {{ assets.new_additions.content[index + 5].rating.averageRating }} | {{ assets.new_additions.content[index + 5].rating.ratingCount }} reviews.
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+
+
+			</div> <!-- END New Additions -->
+
+			<!-- Recently Updated -->
+			<div v-if="assets.recently_updated && assets.recently_updated.totalElements > 0">
+
+
+				<br /><br />
+				<a name="recently_updated"></a>
+				<br />
+
+				<div class="ui segments">
+					<div class="ui inverted segment">
+						<h2 class="ui header">
+							Recently Updated
+						</h2>
+					</div>
+					<div class="ui blue segment">
+
+						<div class="ui stackable grid">
+							<div class="row" v-for="(row, index) in 5">
+
+								<!-- Left -->
+								<div class="eight wide column">
+
+									<div class="ui blue segment">
+
+										<div class="ui grid">
+
+											<div class="eight wide column">
+												<div class="ui rounded fluid bordered image">
+													<img :src="'/image/' + assets.recently_updated.content[index].mediaLinks.imageIds.split(',')[0]">
+												</div>
+											</div>
+
+											<div class="eight wide column">
+
+												<a :href="'/' + assets.recently_updated.content[index].id">
+													<h3 class="ui header">
+														{{ assets.recently_updated.content[index].details.title }}
+													</h3>
+												</a>
+
+												<img class="ui avatar image" :src="'/image/' + assets.recently_updated.content[index].owner.avatarId" />
+												by
+												<a :href="'/user/profile/' + assets.recently_updated.content[index].owner.id">
+													{{ assets.recently_updated.content[index].owner.username }}
+												</a>
+
+												<p>
+													{{ assets.recently_updated.content[index].details.shortDescription }}
+												</p>
+
+
+												<div class="ui mini star rating ministar disabled">
+													<i class="star icon" :class="assets.recently_updated.content[index].rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index].rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index].rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index].rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index].rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+												</div>
+
+												<div>
+													Rated: {{ assets.recently_updated.content[index].rating.averageRating }} | {{ assets.recently_updated.content[index].rating.ratingCount }} reviews.
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+								<!-- Right -->
+								<div class="eight wide column">
+
+									<div class="ui blue segment">
+
+										<div class="ui grid">
+
+											<div class="eight wide column">
+												<div class="ui rounded fluid bordered image">
+													<img :src="'/image/' + assets.recently_updated.content[index + 5].mediaLinks.imageIds.split(',')[0]">
+												</div>
+											</div>
+
+											<div class="eight wide column">
+
+												<a :href="'/' + assets.recently_updated.content[index + 5].id">
+													<h3 class="ui header">
+														{{ assets.recently_updated.content[index + 5].details.title }}
+													</h3>
+												</a>
+
+												<img class="ui avatar image" :src="'/image/' + assets.recently_updated.content[index + 5].owner.avatarId" />
+												by
+												<a :href="'/user/profile/' + assets.recently_updated.content[index + 5].owner.id">
+													{{ assets.recently_updated.content[index + 5].owner.username }}
+												</a>
+
+												<p>
+													{{ assets.recently_updated.content[index + 5].details.shortDescription }}
+												</p>
+
+
+												<div class="ui mini star rating ministar disabled">
+													<i class="star icon" :class="assets.recently_updated.content[index + 5].rating.averageRating >= 1 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index + 5].rating.averageRating >= 2 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index + 5].rating.averageRating >= 3 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index + 5].rating.averageRating >= 4 ? 'yellow' : 'black'"></i>
+													<i class="star icon" :class="assets.recently_updated.content[index + 5].rating.averageRating >= 5 ? 'yellow' : 'black'"></i>
+												</div>
+
+												<div>
+													Rated: {{ assets.recently_updated.content[index + 5].rating.averageRating }} | {{ assets.recently_updated.content[index + 5].rating.ratingCount }} reviews.
+												</div>
+
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+
+
+			</div> <!-- END Recently Updated -->
+			<br /><br />
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>

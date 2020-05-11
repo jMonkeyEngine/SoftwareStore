@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Asset Store :: Administration</title>
+
+	<script src="/js/admin/page-badges.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h1 class="ui dividing header">Administrator :: Badges</h1>
+
+		<div th:replace="fragments/admin/admin-menu :: adminMenu"></div>
+
+		<br />
+
+		<!-- Create / Edit Badges -->
+		<div>
+			<div class="ui selection dropdown" id="badgesDropdown">
+				<i class="dropdown icon"></i>
+				<div class="default text">
+					<i v-if="badges.length > 0" :class="badges[0].icon"></i>
+					<span v-if="badges.length > 0">{{ badges[0].name }}</span>
+				</div>
+				<div class="menu">
+					<div class="item" v-for="(badge, index) in badges" :data-value="index">
+						<i :class="badge.icon"></i>
+						{{ badge.name }}
+					</div>
+				</div>
+			</div>
+			<button @click="createNewBadge()" href="/store/create/potential/" class="ui green button"><i class="plus icon"></i>Create Badge</button>
+			<form class="ui form" id="badgesForm">
+				<input type="hidden" name="id" value="-1" />
+
+				<div class="field">
+					<label>Name</label>
+					<input type="text" name="name" placeholder="Name" />
+				</div>
+
+				<div class="field">
+					<label>Description</label>
+					<input type="text" name="description" placeholder="Description" />
+				</div>
+
+				<div class="field">
+					<label>Icon</label>
+					<input type="text" name="icon" placeholder="Icon" />
+				</div>
+			</form>
+			<br />
+			<button @click="postBadgeData()" class="ui green button"><i class="check icon"></i>Save Changes</button>
+			<button @click="deleteBadgeData()" class="ui red button"><i class="trash alternate outline icon"></i>Delete Badge</button>
+		</div>
+		<!-- END Create / Edit Badges -->
+
+		<br /><br />
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Advanced Search</title>
+
+	<script src="/js/search/index.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h2 class="ui dividing header">Advanced Search</h2>
+
+		<div class="ui two column internally celled stackable grid">
+			<div class="twelve wide column">
+				<div v-if="searched && searchResult.content.length == 0" class="ui message">
+					No results found.
+				</div>
+
+				<br />
+
+				<div v-if="searchResult.content != null && searchResult.content.length > 0">
+
+					<div v-for="asset in searchResult.content" class="ui segments">
+						<div class="ui inverted segment">
+							<a :href="'/' + asset.id">
+								<span class="ui large text">{{ asset.details.title }}</span>
+							</a>
+							<span class="ui star rating small disabled" style="position: absolute; top: 40%; right: 1%;">
+								<i class="yellow star icon" v-for="index in asset.rating.averageRating"></i>
+								<i class="grey star icon" v-for="index in (5 - asset.rating.averageRating)"></i>
+							</span>
+						</div>
+						<div class="ui secondary segment" style="min-height: 110px;">
+							<img class="ui small left floated image" :src="'/image/' + asset.mediaLinks.imageIds.split(',')[0]" />
+
+							<span>by {{ asset.owner.username }}</span>
+
+							<div>
+								{{ asset.details.shortDescription }}
+							</div>
+						</div>
+						<div class="ui bottom segment">
+							<!-- Tags -->
+
+							<div class="ui black labels" v-if="asset.details.tags.length > 0">
+								<a class="ui label" :href="'/search/?tag=' + encodeURI(tag)" v-for="tag in asset.details.tags.split(',')">
+									{{ tag }}
+								</a>
+							</div>
+							<span v-if="asset.details.tags.length == 0" class="ui label">No Tags Specified</span>
+
+							<!-- END: Tags -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="four wide column">
+				<div class="ui form">
+					<div class="field">
+						<div class="ui selection dropdown tooltip" id="categoriesDropdown" data-content="Category">
+							<input type="hidden" v-model="search.categoryId" />
+							<i class="dropdown icon"></i>
+							<div class="default text">All</div>
+							<div class="menu">
+								<div class="item" data-value="-1">All</div>
+								<div class="item" th:if="${category.parent != null}" th:each="category : ${categories}" th:data-value="${category.id}" th:text="${category.parent.name + ' > ' + category.name}" th:value="${category.name}"></div>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui fluid input tooltip" data-content="Title">
+							<input type="text" placeholder="title" v-model="search.title" />
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui fluid input tooltip" data-content="tag">
+							<input type="text" placeholder="tag" v-model="search.tag" />
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui fluid input tooltip" data-content="author">
+							<input type="text" placeholder="author" v-model="search.author" />
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui selection dropdown tooltip" id="orderByDropdown" data-content="Order By">
+							<input type="hidden" value="search.orderBy" />
+							<i class="dropdown icon"></i>
+							<div class="default text">Newest</div>
+							<div class="menu">
+								<div class="item" data-value="title">Title</div>
+								<div class="item" data-value="created">Creation Date</div>
+								<div class="item" data-value="updated">Last Updated</div>
+								<div class="item" data-value="rating">Rating</div>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui selection dropdown tooltip" id="directionDropdown" data-content="Direction">
+							<input type="hidden" v-model="search.direction" />
+							<i class="dropdown icon"></i>
+							<div class="default text">Descending</div>
+							<div class="menu">
+								<div class="item" data-value="descending">Descending</div>
+								<div class="item" data-value="ascending">Ascending</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br />
+				<div @click="beginSearch()" id="searchButton" class="ui button">Search</div>
+			</div>
+		</div>
+
+		<br /><br />
+
+	</div>
+
+
+</body>
+
+</html>

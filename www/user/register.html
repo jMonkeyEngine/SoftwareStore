@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Register</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+			<div class="ui container">
+				<br />
+				<h1>Register New Account</h1>
+
+				<p>
+					You will require an account if you wish to submit your software to the store.
+				</p>
+			</div>
+			<div class="ui divider"></div>
+			<div class="ui container">
+				<div th:unless="${user}">
+					<form class="ui form" method="post" action="/user/register/" id="registerForm">
+						<div class="required field">
+							<label>Username</label>
+							<input type="text" name="username" placeholder="Username" />
+						</div>
+
+						<div class="required field">
+							<label>Email</label>
+							<input type="email" name="email" placeholder="Email Address" />
+						</div>
+
+						<div class="required field">
+							<label>Password</label>
+							<input type="password" name="password" placeholder="Password" />
+						</div>
+
+						<p>Please read our <a href="/legal/terms/">terms and conditions</a>.</p>
+
+						<div class="required field">
+							<div class="ui checkbox">
+								<input type="checkbox" name="terms" />
+								<label>I agree to the Terms and Conditions</label>
+							</div>
+						</div>
+
+						<button type="submit" class="ui green submit button">Register A New Account</button>
+
+						<div class="ui error message"></div>
+
+						<div class="ui red message visible" th:if="${error}">
+							<ul>
+								<li th:each="err : ${error}">
+									<span th:text="${err}"></span>
+								</li>
+							</ul>
+						</div>
+					</form>
+
+					<!--
+					<script type="text/javascript">
+						$(".ui.form").form({
+							fields: {
+								username: {
+									identifier: "username",
+									rules: [
+										{
+											type: "minLength[3]",
+											prompt: "Your username must be at least {ruleValue} characters long."
+										}
+									]
+								},
+
+								email: {
+									identifier: "email",
+									rules: [
+										{
+											type: "email",
+											prompt: "Please specify a valid email address."
+										}
+									]
+								},
+
+								password: {
+									identifier: "password",
+									rules: [
+										{
+											type: "minLength[6]",
+											prompt: "Your password must be at least {ruleValue} characters long."
+										}
+									]
+								},
+
+								terms: {
+									identifier: "terms",
+									rules: [
+										{
+											type: "checked",
+											prompt: "You must agree to the terms and conditions"
+										}
+									]
+								}
+							}
+						});
+					</script>-->
+				</div>
+
+				<div th:if="${user}">
+					<div th:text=" 'You are already logged in as ' + ${user.name}">Hi, User</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

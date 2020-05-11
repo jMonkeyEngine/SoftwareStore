@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>Asset Store :: Administration</title>
+
+	<script src="/js/admin/page-user.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h1 class="ui dividing header">Administrator :: User</h1>
+
+		<div th:replace="fragments/admin/admin-menu :: adminMenu"></div>
+
+		<input id="username" type="hidden" th:value="${username}" />
+
+		<!-- Profile -->
+		<div>
+			<h2 class="ui header">Profile</h2>
+
+			<table class="ui very basic celled table" v-if="user != null">
+				<tbody>
+					<tr>
+						<td class="collapsing right aligned"><b>Username</b></td>
+						<td>{{ user.username }}</td>
+						<td>
+							<button class="ui icon button"><i class="ui pencil icon"></i></button>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned"><b>Name</b></td>
+						<td>{{ user.name }}</td>
+						<td>
+							<button class="ui icon button"><i class="ui pencil icon"></i></button>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="collapsing right aligned"><b>Email</b></td>
+						<td v-if="user_email.length > 0">{{ user_email }}</td>
+						<td v-if="user_email.length == 0"><button @click="requestUserEmail(user.id)" class="ui tiny button">Request</button></td>
+						<td>
+							<button class="ui icon button"><i class="ui pencil icon"></i></button>
+						</td>
+					</tr>
+					<tr>
+						<td class="collapsing right aligned"><b>Profile Picture</b></td>
+						<td><img class="ui tiny avatar image" :src="'/image/' + user.avatarId" /></td>
+						<td>
+							<button class="ui button">Remove Avatar</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- END Profile -->
+
+		<div class="ui divider"></div>
+
+		<!-- Badges -->
+		<div>
+			<h2 class="ui header">Badges</h2>
+
+			<table class="ui very basic celled table">
+				<tr>
+					<td class="collapsing right aligned"><b>Current Badges</b></td>
+					<td>
+						<span v-if="user.badges == null || user.badges.length == 0">0 Badges</span>
+
+						<div v-if="user.badges != null && user.badges.length > 0">
+							<span class="ui large blue label" v-for="badge in user.badges"> <i :class="badge.icon"></i>{{ badge.name }} </span>
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<table class="ui very basic table">
+				<tr>
+					<td class="collapsing right aligned"><b>Grant Badge</b></td>
+					<td class="collapsing">
+						<div class="ui selection dropdown" id="badgeGrants">
+							<input type="hidden" name="gender" />
+							<i class="dropdown icon"></i>
+							<div class="default text">
+								Choose One
+							</div>
+							<div class="menu">
+								<div class="item" v-for="(badge, index) in filtered_badges" :data-value="index">
+									<i :class="badge.icon"></i>
+									{{ badge.name }}
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<button v-on:click="grantBadge()" class="ui green button">Grant</button>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="collapsing right aligned"><b>Revoke Badge</b></td>
+					<td class="collapsing">
+						<div class="ui selection dropdown" id="badgeRevokes">
+							<input type="hidden" name="gender" />
+							<i class="dropdown icon"></i>
+							<div class="default text">
+								Choose One
+							</div>
+							<div class="menu">
+								<div class="item" v-for="(badge, index) in user.badges" :data-value="index">
+									<i :class="badge.icon"></i>
+									{{ badge.name }}
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<button v-on:click="revokeBadge()" class="ui green button">Revoke</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- END Badges -->
+
+		<!-- Pages -->
+		<div>
+			<h2 class="ui header">Pages</h2>
+
+			<!-- Draft Pages -->
+			<h3 class="ui header" v-if="pages.drafts">Draft Pages ({{ pages.drafts.length }})</h3>
+			<div>
+				<table class="ui small compact fluid striped orange celled table" v-if="pages.drafts && pages.drafts.length > 0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Created</th>
+							<th>Last Updated</th>
+							<th>Status</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr v-for="(draft, index) in pages.drafts" :class="draft.reviewState == 'Under_Review' ? 'warning' : ''">
+							<td>
+								<a v-bind:href="'/preview/draft/' + draft.id" target="_blank" data-content="View" data-variation="mini">{{
+										draft.details.title
+									}}</a>
+							</td>
+
+							<td class="collapsing">{{ draft.softwareType }}</td>
+
+							<td class="collapsing">{{ millisToDate(draft.dateCreated) }}</td>
+
+							<td class="collapsing">
+								{{ millisToDate(draft.dateUpdated) }}
+							</td>
+
+							<td class="collapsing">
+								<span class="ui blue label" v-if="draft.reviewState === 'Review_Requested'">{{ draft.reviewState.replace("_", " ") }}
+								</span>
+								<span class="ui green label" v-if="draft.reviewState === 'Under_Review'">{{ draft.reviewState.replace("_", " ") }} </span>
+
+								<a v-if="draft.reviewState === 'Rejected'" :href="'/rejections/draft/' + draft.id" class="tooltip" data-content="View Rejection Reason(s)">
+									<span class="ui red label">{{ draft.reviewState }} </span>
+								</a>
+
+								<span v-if="draft.reviewState === 'None'">Not Submitted</span>
+							</td>
+
+							<td class="collapsing">
+								<button v-if="draft.reviewState == 'None' || draft.reviewState == 'Rejected'" v-on:click="deleteDraft(draft.id, index)" class="ui mini button icon red tooltip deleteDraftButton" data-content="Delete" data-variation="mini">
+									<i class="trash alternate outline icon"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="ui message" v-else><i class="info circle icon"></i>{{ user.username }} has no draft pages.</div>
+			</div>
+			<!-- END Draft Pages -->
+
+			<div class="ui divider"></div>
+
+			<!-- Live Pages -->
+			<h3 class="ui header" v-if="pages.live">Live Pages ({{ pages.live.length }})</h3>
+			<div>
+				<table class="ui small compact fluid celled striped green table" v-if="pages.live && pages.live.length > 0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Created</th>
+							<th>Last Updated</th>
+
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr v-for="(livePage, index) in pages.live">
+							<td>
+								<a v-bind:href="'/' + livePage.id">{{ livePage.details.title }}</a>
+							</td>
+
+							<td class="collapsing">{{ livePage.softwareType }}</td>
+
+							<td class="collapsing">{{ millisToDate(livePage.dateCreated) }}</td>
+
+							<td class="collapsing">
+								{{ millisToDate(livePage.dateUpdated) }}
+							</td>
+
+							<td class="collapsing">
+								<button v-on:click="deleteLivePage(livePage.id, index)" class="ui mini red button icon tooltip submit" data-content="Create Amendment" data-variation="mini">
+									<i class="trash alternate icon"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="ui message" v-else><i class="info circle icon"></i>{{ user.username }} has no live pages.</div>
+			</div>
+			<!-- END Live Pages -->
+
+			<div class="ui divider"></div>
+
+			<!-- Live Page Amendments -->
+			<h3 class="ui header" v-if="pages.amendments">Live Page Amendments ({{ pages.amendments.length }})</h3>
+			<div>
+				<table class="ui small compact fluid celled striped blue table" v-if="pages.amendments && pages.amendments.length > 0">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Created</th>
+							<th>Last Edited</th>
+							<th>Status</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr v-for="(amendment, index) in pages.amendments" :class="( amendment.reviewState == 'Review_Requested' || amendment.reviewState == 'Under_Review' ) ? 'warning' : ''">
+							<td>
+								<a v-bind:href="'/preview/amendment/' + amendment.id" data-content="View" data-variation="mini">{{
+										amendment.details.title
+									}}</a>
+							</td>
+
+							<td class="collapsing">{{ amendment.softwareType }}</td>
+
+							<td class="collapsing">{{ millisToDate(amendment.dateCreated) }}</td>
+
+							<td class="collapsing">
+								{{ millisToDate(amendment.dateUpdated) }}
+							</td>
+
+							<td class="collapsing">
+								<span class="ui black label" v-if="amendment.reviewState == 'Review_Requested'"><i class="attention icon"></i>Requested</span>
+								<span class="ui green label" v-else-if="amendment.reviewState == 'Under_Review'"><i class="attention icon"></i>Requested</span>
+
+								<span v-else>Not Submitted</span>
+							</td>
+
+							<td class="collapsing">
+								<button v-on:click="deleteAmendment(amendment.id, index)" class="ui mini button icon red tooltip deleteAmendmentButton" data-content="Delete" data-variation="mini">
+									<i class="trash alternate outline icon"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="ui message" v-else><i class="info circle icon"></i>{{ user.username }} has no open amendments.</div>
+			</div>
+
+			<!-- END Live Page Amendments -->
+		</div>
+		<!-- END Pages -->
+
+		<!-- Modals -->
+		<div th:replace="fragments/modals/delete-page-draft :: delete-draft-modal"></div>
+		<div th:replace="fragments/modals/delete-page-live :: delete-live-modal"></div>
+		<div th:replace="fragments/modals/delete-page-amendment :: delete-amendment-modal"></div>
+		<!-- END Modals -->
+
+		<br /><br />
+	</div>
+</body>
+
+</html>

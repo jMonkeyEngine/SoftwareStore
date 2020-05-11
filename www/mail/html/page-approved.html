@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Page Approved</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<p th:inline="text">
+			Hi [[${username}]].
+		</p>
+
+		<p th:if="${!amendment}">
+			Congratulations! Your store page <b th:text="${page.details.title}"></b> has been approved! Your page is now live on the asset store and visible to
+			the public! Click the link below to view your asset.
+		</p>
+
+		<p th:if="${amendment}">
+			Congratulations! Your changes to your store page <b th:text="${page.details.title}"></b> are now live on the asset store! Thank you for updating
+			your software! Click the link below to view your updated software.
+		</p>
+
+		<p>
+			<a th:href="'https://jmonkeystore.com/' + ${page.id}" th:text="'https://jmonkeystore.com/' + ${page.id}"></a>
+		</p>
+
+		<p>
+			Regards, <br />
+			The JmonkeyStore Team
+		</p>
+	</body>
+</html>

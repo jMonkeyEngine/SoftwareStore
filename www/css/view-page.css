@@ -1,0 +1,19 @@
+.tag-item {
+	text-transform: capitalize !important;
+	margin-right: 5px !important;
+}
+
+#asset-content-div img {
+	max-width: 100%;
+}
+
+.blueimp-gallery > .description {
+	position: absolute;
+	top: 30px;
+	left: 15px;
+	color: #fff;
+	display: none;
+}
+.blueimp-gallery-controls > .description {
+	display: block;
+}

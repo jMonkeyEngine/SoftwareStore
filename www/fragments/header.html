@@ -1,0 +1,51 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="header">
+		<div class="ui stackable inverted menu" style="border-bottom: 2px solid #ddd;">
+			<div class="ui container">
+				<div class="item">
+					<a href="/"><img class="ui image" src="/images/logo-small.png" /></a>
+				</div>
+
+				<div class="ui inverted dropdown item">
+					Browse
+					<i class="dropdown icon"></i>
+					<div class="menu">
+						<div class="dropdown item" th:each="category : ${categories}" th:if="${category.parent} == null" th:inline="text">
+							[[ ${category.name} ]]
+
+							<div class="menu">
+								<div class="item" th:each="child : ${categories}" th:if="${child.parent != null && child.parent.id == category.id}">
+									<a th:text="${child.name}" th:href="@{/search/?categoryId={catId}(catId=${child.id})}"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="item">
+					<div id="topSearchContainer" class="ui search" style="z-index: 2; width: 300px;">
+						<div class="ui left icon input fluid">
+							<input id="topMenuSearch" type="text" placeholder="Search..." class="searchInput prompt" />
+							<i class="grey box icon"></i>
+						</div>
+						<div class="results"></div>
+					</div>
+				</div>
+
+				<div class="right menu" th:if="${user == null}">
+					<a class="item" id="sideMenuButton"><i class="sidebar icon"></i>Menu</a>
+				</div>
+
+				<div class="right menu" th:if="${user != null}">
+					<a class="item" id="sideMenuButton"><i class="sidebar icon"></i>
+						<img class="ui image avatar" style="cursor: pointer;" th:src="@{|/image/${user.avatarId}} + '.jpg'" />
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

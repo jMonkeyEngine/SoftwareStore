@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+	<head>
+		<title>Home</title>
+	</head>
+	<body>
+		<div layout:fragment="content" class="ui container">
+			<br />
+
+			<div th:if="${approved}">account approved.</div>
+			<div th:unless="${approved}">account not approved.</div>
+		</div>
+	</body>
+</html>

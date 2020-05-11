@@ -1,0 +1,77 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+group 'com.jayfella'
+version '1.0.54'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+mainClassName = "com.jayfella.website.Main"
+
+project.ext {
+    version_thymeleaf_dialect = "2.4.1"
+    version_jackson = "2.11.0"
+
+    version_mysql_connector = "8.0.20"
+
+    version_httpcomponents = "4.5.12"
+    version_validator = "1.6"
+}
+
+dependencies {
+
+    //compile fileTree(include: ['*.jar'], dir: 'plugins')
+
+    // SPRING
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
+    //implementation "org.springframework.boot:spring-boot-starter-security"
+    // implementation "org.springframework.boot:spring-boot-starter-websocket"
+    // implementation "org.springframework.boot:spring-boot-starter-activemq"
+    implementation "org.springframework.boot:spring-boot-starter-mail"
+    //implementation "org.springframework.boot:spring-boot-devtools"
+
+    // TEMPLATING - Thymeleaf
+    implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:$version_thymeleaf_dialect"
+
+    // DATABASE - MySQL Driver
+    implementation "mysql:mysql-connector-java:$version_mysql_connector"
+
+    // JSON - jackson
+    implementation "com.fasterxml.jackson.core:jackson-core:$version_jackson"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$version_jackson"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$version_jackson"
+    
+    // HTTP - client
+    implementation "org.apache.httpcomponents:httpclient:$version_httpcomponents"
+
+    // Validators (email, etc)
+    implementation "commons-validator:commons-validator:$version_validator"
+
+    // sitemap
+    compile group: 'com.github.dfabulich', name: 'sitemapgen4j', version: '1.1.2'
+
+
+}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<title>My Pages</title>
+
+	<script src="/js/user/my-pages.js" defer></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="ui container" id="app">
+		<br />
+
+		<h1 class="ui header">
+			My Pages
+			<a href="/create/" class="ui green button right floated"><i class="plus icon"></i>Create New Draft</a>
+		</h1>
+		<p>
+			A list of all pages that belong to you.
+		</p>
+
+		<!-- Draft Pages -->
+		<h3 class="ui header" v-if="pages.drafts">Draft Pages ({{ pages.drafts.length }})</h3>
+		<div>
+			<p>
+				Draft pages are pages you have created that have not yet been submitted and approved. Draft pages are <b>not</b> visible on the store and
+				are either waiting for you to submit them for approval or waiting to be approved. If a draft page is approved it will become a
+				<b>Live Page</b> and visible to the public on the store. You may create a maximum of 5 draft pages at any time.
+			</p>
+
+			<table class="ui small compact fluid striped orange celled table" v-if="pages.drafts && pages.drafts.length > 0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Created</th>
+						<th>Last Updated</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr v-for="(draft, index) in pages.drafts" :class="draft.reviewState == 'Under_Review' ? 'warning' : ''">
+						<td>
+							<a v-bind:href="'/preview/draft/' + draft.id" target="_blank" data-content="View" data-variation="mini">{{
+									draft.details.title
+								}}</a>
+						</td>
+
+						<td class="collapsing">{{ draft.softwareType }}</td>
+
+						<td class="collapsing">{{ millisToDate(draft.dateCreated) }}</td>
+
+						<td class="collapsing">
+							{{ millisToDate(draft.dateUpdated) }}
+						</td>
+
+						<td class="collapsing">
+							<span class="ui blue label" v-if="draft.reviewState === 'Review_Requested'">{{ draft.reviewState.replace("_", " ") }} </span>
+							<span class="ui green label" v-if="draft.reviewState === 'Under_Review'">{{ draft.reviewState.replace("_", " ") }} </span>
+
+							<a v-if="draft.reviewState === 'Rejected'" :href="'/rejections/draft/' + draft.id" class="tooltip" data-content="View Rejection Reason(s)">
+								<span class="ui red label">{{ draft.reviewState }} </span>
+							</a>
+
+							<span v-if="draft.reviewState === 'None'">Not Submitted</span>
+						</td>
+
+						<td class="collapsing">
+							<a v-if="draft.reviewState == 'None' || draft.reviewState == 'Rejected'" v-bind:href="'/edit/draft/' + draft.id" class="ui mini black button icon tooltip" data-content="Edit" data-variation="mini"><i class="pencil icon"></i></a>
+
+							<button v-if="draft.reviewState == 'None' || draft.reviewState == 'Rejected'" v-on:click="onDeleteDraftClicked(draft.id, index)" class="ui mini button icon red tooltip deleteDraftButton" data-content="Delete" data-variation="mini">
+								<i class="trash alternate outline icon"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="ui message" v-else><i class="info circle icon"></i>You have no draft pages.</div>
+		</div>
+		<!-- END Draft Pages -->
+
+		<div class="ui divider"></div>
+
+		<!-- Live Pages -->
+		<h3 class="ui header" v-if="pages.live">Live Pages ({{ pages.live.length }})</h3>
+		<div>
+			<p>
+				Live Pages are store pages that are approved and visible on the store.
+			</p>
+
+			<table class="ui small compact fluid celled striped green table" v-if="pages.live && pages.live.length > 0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Created</th>
+						<th>Last Updated</th>
+
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr v-for="(livePage, index) in pages.live">
+						<td>
+							<a v-bind:href="'/' + livePage.id">{{ livePage.details.title }}</a>
+						</td>
+
+						<td class="collapsing">{{ livePage.softwareType }}</td>
+
+						<td class="collapsing">{{ millisToDate(livePage.dateCreated) }}</td>
+
+						<td class="collapsing">
+							{{ millisToDate(livePage.dateUpdated) }}
+						</td>
+
+						<td class="collapsing">
+							<button v-on:click="onCreateAmendment(livePage.id)" class="ui mini black button icon tooltip submit" data-content="Create Amendment" data-variation="mini">
+								<i class="pencil icon"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="ui message" v-else><i class="info circle icon"></i>You have no pages that are currently live in the store.</div>
+		</div>
+		<!-- END Live Pages -->
+
+		<div class="ui divider"></div>
+
+		<!-- Live Page Amendments -->
+		<h3 class="ui header" v-if="pages.amendments">Live Page Amendments ({{ pages.amendments.length }})</h3>
+		<div>
+			<p>
+				Live Page amendments are changes to live pages. Any changes proposed by you must be approved by a member of staff before those changes
+				become visible on the store.
+			</p>
+
+			<table class="ui small compact fluid celled striped blue table" v-if="pages.amendments && pages.amendments.length > 0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Created</th>
+						<th>Last Edited</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr v-for="(amendment, index) in pages.amendments" :class="( amendment.reviewState == 'Review_Requested' || amendment.reviewState == 'Under_Review' ) ? 'warning' : ''">
+						<td>
+							<a v-bind:href="'/preview/amendment/' + amendment.id" data-content="View" data-variation="mini">{{
+									amendment.details.title
+								}}</a>
+						</td>
+
+						<td class="collapsing">{{ amendment.softwareType }}</td>
+
+						<td class="collapsing">{{ millisToDate(amendment.dateCreated) }}</td>
+
+						<td class="collapsing">
+							{{ millisToDate(amendment.dateUpdated) }}
+						</td>
+
+						<td class="collapsing">
+							<span class="ui black label" v-if="amendment.reviewState == 'Review_Requested'"><i class="attention icon"></i>Requested</span>
+							<span class="ui green label" v-else-if="amendment.reviewState == 'Under_Review'"><i class="attention icon"></i>Requested</span>
+
+							<a v-if="amendment.reviewState === 'Rejected'" :href="'/rejections/amendment/' + amendment.id" class="tooltip" data-content="View Rejection Reason(s)">
+								<span class="ui red label">{{ amendment.reviewState }} </span>
+							</a>
+
+							<span v-else>Not Submitted</span>
+						</td>
+
+						<td class="collapsing">
+							<a v-bind:href="'/edit/amendment/' + amendment.id" target="_blank" class="ui mini black button icon tooltip" data-content="Edit" data-variation="mini"><i class="pencil icon"></i></a>
+
+							<button v-on:click="onDeleteAmendmentClicked(amendment.id, index)" class="ui mini button icon red tooltip deleteAmendmentButton" data-content="Delete" data-variation="mini">
+								<i class="trash alternate outline icon"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="ui message" v-else><i class="info circle icon"></i>You have no page amendments.</div>
+		</div>
+
+		<!-- END Live Page Amendments -->
+
+		<br /><br />
+
+		<!-- Modals -->
+		<div th:replace="fragments/modals/delete-page-draft :: delete-draft-modal"></div>
+		<div th:replace="fragments/modals/delete-page-live :: delete-live-modal"></div>
+		<div th:replace="fragments/modals/delete-page-amendment :: delete-amendment-modal"></div>
+		<!-- END Modals -->
+	</div>
+
+
+
+</body>
+
+</html>

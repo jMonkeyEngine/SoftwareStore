@@ -304,20 +304,17 @@
 										</td>
 									</tr>
 
-									<tr>
+									<tr v-if="page.externalLinks.publisherWebsite != null && page.externalLinks.publisherWebsite.length > 0">
 										<td><i class="external alternate icon"></i>Publisher Website</td>
 										<td class="right aligned">
-											<a v-if="page.externalLinks.publisherWebsite.length > 0" :href="page.externalLinks.publisherWebsite" target="_blank"><i class="external alternate icon"></i>Visit Publisher</a>
-											<span v-if="page.externalLinks.publisherWebsite.length == 0">None Specified</span>
+											<a :href="page.externalLinks.publisherWebsite" target="_blank"><i class="external alternate icon"></i>Visit Publisher</a>
 										</td>
 									</tr>
 
-									<tr>
+									<tr v-if="page.externalLinks.docsWebsite != null && page.externalLinks.docsWebsite.length > 0">
 										<td><i class="book icon"></i>Documentation</td>
 										<td class="right aligned">
-											<a v-if="page.externalLinks.docsWebsite.length > 0" :href="page.externalLinks.docsWebsite" target="_blank"><i class="book icon"></i>Documentation</a>
-											<span v-if="page.externalLinks.docsWebsite == 0">None Specified</span>
-
+											<a :href="page.externalLinks.docsWebsite" target="_blank"><i class="book icon"></i>Documentation</a>
 										</td>
 									</tr>
 

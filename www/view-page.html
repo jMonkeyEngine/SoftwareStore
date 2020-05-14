@@ -331,6 +331,15 @@
 										</td>
 									</tr>
 
+									<tr>
+										<td><i class="external alternate icon"></i>Community Hub Thread</td>
+										<td class="right aligned">
+											<a v-if="page.externalLinks.hubLink != null && page.externalLinks.hubLink.length > 0" :href="page.externalLinks.hubLink" target="_blank">View Hub Thread</a>
+											<span v-else>None Specified</span>
+
+										</td>
+									</tr>
+
 								</table>
 
 								<div class="ui divider"></div>

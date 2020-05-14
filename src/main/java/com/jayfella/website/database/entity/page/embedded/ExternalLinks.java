@@ -24,6 +24,7 @@ public class ExternalLinks {
     public void copyTo(ExternalLinks externalLinks) {
         externalLinks.setDocsWebsite(docsWebsite);
         externalLinks.setPublisherWebsite(publisherWebsite);
+        externalLinks.setHubLink(hubLink);
     }
 
 }

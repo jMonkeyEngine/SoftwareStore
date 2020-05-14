@@ -20,7 +20,7 @@ repositories {
 }
 
 group 'com.jayfella'
-version '1.0.54'
+version '1.0.56'
 
 sourceCompatibility = 11
 targetCompatibility = 11

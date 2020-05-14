@@ -16,6 +16,11 @@ public class ExternalLinks {
     public String getPublisherWebsite() { return publisherWebsite; }
     public void setPublisherWebsite(String publisherWebsite) { this.publisherWebsite = publisherWebsite; }
 
+    @Column(length = 255)
+    private String hubLink = "";
+    public String getHubLink() { return hubLink; }
+    public void setHubLink(String hubLink) { this.hubLink = hubLink; }
+
     public void copyTo(ExternalLinks externalLinks) {
         externalLinks.setDocsWebsite(docsWebsite);
         externalLinks.setPublisherWebsite(publisherWebsite);

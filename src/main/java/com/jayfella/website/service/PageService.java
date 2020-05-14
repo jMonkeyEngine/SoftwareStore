@@ -440,6 +440,13 @@ public class PageService {
             updated.add("Publisher Website");
         }
 
+        // external hub link
+        String hubLink = getRequestParam("externallinks-hublink", request);
+        if (!StringUtils.equals(hubLink, page.getExternalLinks().getHubLink())) {
+            page.getExternalLinks().setHubLink(hubLink);
+            updated.add("Hub Link");
+        }
+
         // OPEN SOURCE DATA
 
         String gitRepo = getRequestParam("opensource-git-repo", request);

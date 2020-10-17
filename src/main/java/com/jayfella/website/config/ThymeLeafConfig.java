@@ -17,6 +17,8 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.nio.charset.StandardCharsets;
 
+import com.jayfella.website.config.external.ServerConfig;
+
 @Configuration
 @EnableWebMvc
 public class ThymeLeafConfig implements WebMvcConfigurer {
@@ -36,6 +38,7 @@ public class ThymeLeafConfig implements WebMvcConfigurer {
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         templateResolver.setOrder(1);
+        
 
         return templateResolver;
     }
@@ -59,7 +62,8 @@ public class ThymeLeafConfig implements WebMvcConfigurer {
 
         viewResolver.setTemplateEngine(templateEngine());
         viewResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
+        viewResolver.addStaticVariable("siteName", ServerConfig.getInstance().getSiteName());
+        viewResolver.addStaticVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
         return viewResolver;
     }
 

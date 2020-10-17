@@ -15,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Properties;
 
+import com.jayfella.website.config.external.ServerConfig;
+
 @Configuration
 public class EmailConfig {
 
@@ -24,11 +26,11 @@ public class EmailConfig {
     public JavaMailSender getJavaMailSender() {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.zoho.eu");
-        mailSender.setPort(587);
+        mailSender.setHost(ServerConfig.getInstance().getSmtpHost());
+        mailSender.setPort(ServerConfig.getInstance().getSmtpPort());
 
-        mailSender.setUsername("jameskhan1983@gmail.com");
-        mailSender.setPassword("1MNMQDEVT3HS");
+        mailSender.setUsername(ServerConfig.getInstance().getSmtpUser());
+        mailSender.setPassword(ServerConfig.getInstance().getSmtpPassword());
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

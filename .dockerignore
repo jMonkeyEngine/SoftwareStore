@@ -1,0 +1,17 @@
+www/images/database/*
+dist/
+.gradle
+gradle
+gradlew
+gradlew.bat
+bin
+build
+**/sitemap.xml
+.project
+.settings
+.classpath
+test_environment
+dist
+config/server-config.json
+.git
+x.*

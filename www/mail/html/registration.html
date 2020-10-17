@@ -6,7 +6,7 @@
 	</head>
 	<body>
 		<p th:inline="text">
-			Hi [[${username}]], thank you for registering at jmonkeystore!
+			Hi [[${username}]], thank you for registering at <span th:text="${siteName}"></span>!
 		</p>
 
 		<p>
@@ -18,12 +18,12 @@
 		<p>To enter this code, navigate to the <b>User Control Panel</b> manually, or click the link below.</p>
 
 		<p>
-			<a href="https://jmonkeystore.com/user/">https://jmonkeystore.com/user/</a>
+			<a  th:href="${websiteFullUrl} + '/user/'"  th:text="${websiteFullUrl} + '/user/'" ></a>
 		</p>
 
 		<p>
 			Regards, <br />
-			The JmonkeyStore Team
+			<span th:text="${siteName}"></span>
 		</p>
 	</body>
 </html>

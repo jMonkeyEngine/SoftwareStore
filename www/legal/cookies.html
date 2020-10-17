@@ -9,19 +9,19 @@
 			<h2>Cookies Policy</h2>
 
 			<p>
-				This website, <span class="website_url">https://jmonkeystore.com</span> (the "Website"), is operated by
-				<span class="website_name">JmonkeyStore</span>.
+				This website, <span class="website_url" th:text="${websiteFullUrl}"></span> (the "Website"), is operated by
+				<span class="website_name"  th:text="${siteName}"></span>.
 			</p>
 
 			<h3>What are cookies?</h3>
 
 			<p>
-				Cookies are a small text files that are stored in your web browser that allows <span class="website_name">JmonkeyStore</span> or a third party
+				Cookies are a small text files that are stored in your web browser that allows <span class="website_name"  th:text="${siteName}"></span> or a third party
 				to recognize you. Cookies can be used to collect, store and share bits of information about your activities across websites, including on
-				<span class="website_name">JmonkeyStore</span> website. This Cookies Policy was created by
+				<span class="website_name"  th:text="${siteName}"></span> website. This Cookies Policy was created by
 				<a href="https://www.cookiespolicytemplate.com">GDPR Cookies Policy Template Generator</a> and the
 				<a href="https://www.termsandcondiitionssample.com">Terms and Conditions Template</a> for
-				<span class="website_url">https://jmonkeystore.com</span>
+				<span class="website_url" th:text="${websiteFullUrl}"></span>
 			</p>
 
 			<p>Cookies might be used for the following purposes:</p>
@@ -33,7 +33,7 @@
 				<li>To enable ad delivery and behavioral advertising</li>
 			</ul>
 
-			<p><span class="website_name">JmonkeyStore</span> uses both session cookies and persistent cookies.</p>
+			<p><span class="website_name"  th:text="${siteName}"></span> uses both session cookies and persistent cookies.</p>
 
 			<p>
 				A session cookie is used to identify a particular visit to our Website. These cookies expire after a short time, or when you close your web
@@ -45,11 +45,10 @@
 				you over a longer period of time. For example, we would use a persistent cookie if you asked that we keep you signed in.
 			</p>
 
-			<h3>How do third parties use cookies on the <span class="website_name">JmonkeyStore</span> Website?</h3>
-
+			<h3>How do third parties use cookies on the <span class="website_name"  th:text="${siteName}"></span> Website?</h3>
 			<p>
 				Third party companies like analytics companies and ad networks generally use cookies to collect user information on an anonymous basis. They may
-				use that information to build a profile of your activities on the <span class="website_name">JmonkeyStore</span> Website and other websites that
+				use that information to build a profile of your activities on the <span class="website_name"  th:text="${siteName}"></span> Website and other websites that
 				you've visited.
 			</p>
 

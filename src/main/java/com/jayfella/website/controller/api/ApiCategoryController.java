@@ -42,7 +42,7 @@ public class ApiCategoryController {
             return ApiResponses.insufficientPermission();
         }
 
-        if (request.getName().isBlank()) {
+        if (request.getName()==null||request.getName().trim().isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(new SimpleApiResponse("You must provide a name."));
         }

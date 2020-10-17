@@ -1,5 +1,6 @@
 package com.jayfella.website.service;
 
+import com.jayfella.website.config.external.ServerConfig;
 import com.jayfella.website.database.entity.page.stages.LivePage;
 import com.jayfella.website.database.repository.page.LivePageRepository;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
@@ -25,12 +26,12 @@ public class SitemapService {
 
     private static final Logger log = LoggerFactory.getLogger(SitemapService.class);
 
-    private static final String HOST = "https://jmonkeystore.com";
+    private static final String HOST = ServerConfig.getInstance().getFullUrl();
 
-    private static final File SITEMAP_BASEDIR = new File("./www/");
-    private static final File SITEMAP_FILE = new File("sitemap.xml");
+    private static final File SITEMAP_BASEDIR = new File("./sitemap/");
+    // private static final File SITEMAP_FILE = new File("./sitemap/sitemap.xml");
 
-    public static final File SITEMAP_FULL_FILE = new File("./www/sitemap.xml");
+    public static final File SITEMAP_FULL_FILE = new File("./sitemap/sitemap.xml");
 
     @Autowired
     private LivePageRepository livePageRepository;
@@ -40,15 +41,15 @@ public class SitemapService {
 
         // this method is called every time a new software page is created by a user.
         // it generates a new sitemap and pings google.
-
+        if(!SITEMAP_BASEDIR.exists())SITEMAP_BASEDIR.mkdirs();
         WebSitemapGenerator sitemapGenerator = new WebSitemapGenerator(HOST, SITEMAP_BASEDIR);
 
         // static pages
-        sitemapGenerator.addUrl("https://jmonkeystore.com/");
-        sitemapGenerator.addUrl("https://jmonkeystore.com/blog/");
+        sitemapGenerator.addUrl(ServerConfig.getInstance().getFullUrl()+"/");
+        sitemapGenerator.addUrl(ServerConfig.getInstance().getFullUrl()+"/blog/");
 
-        sitemapGenerator.addUrl("https://jmonkeystore.com/legal/terms/");
-        sitemapGenerator.addUrl("https://jmonkeystore.com/legal/cookies/");
+        sitemapGenerator.addUrl(ServerConfig.getInstance().getFullUrl()+"/legal/terms/");
+        sitemapGenerator.addUrl(ServerConfig.getInstance().getFullUrl()+"/legal/cookies/");
 
         // software pages
         List<LivePage> software = livePageRepository.findAll();
@@ -56,8 +57,8 @@ public class SitemapService {
         software.forEach(page -> {
 
             String url = new URIBuilder()
-                    .setScheme("https")
-                    .setHost("jmonkeystore.com")
+                    .setScheme(ServerConfig.getInstance().getSiteScheme())
+                    .setHost(ServerConfig.getInstance().getSiteHostName())
                     .setPath("/" + page.getId())
                     .toString();
 
@@ -65,7 +66,9 @@ public class SitemapService {
         });
 
         sitemapGenerator.write();
-        sitemapGenerator.writeSitemapsWithIndex(SITEMAP_FILE);
+
+        // if(!SITEMAP_FILE.getParentFile().exists())SITEMAP_FILE.getParentFile().mkdirs();
+        // sitemapGenerator.writeSitemapsWithIndex(SITEMAP_FILE);
 
         pingGoogle();
 
@@ -74,13 +77,13 @@ public class SitemapService {
     private void pingGoogle() throws IOException {
 
         // http://www.google.com/ping?sitemap=<complete_url_of_sitemap>
-        String url = "http://www.google.com/ping?sitemap=" + "https://jmonkeystore.com/sitemap.xml";
+        String url = "http://www.google.com/ping?sitemap=" + ServerConfig.getInstance().getFullUrl()+"/sitemap.xml";
 
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(url);
 
         // add request header
-        request.addHeader("User-Agent", "jMonkeyStore");
+        request.addHeader("User-Agent", ServerConfig.getInstance().getSiteName());
         HttpResponse response = client.execute(request);
 
         log.info("Google SiteMap Pinger Responded : " + response.getStatusLine().getStatusCode());

@@ -21,7 +21,7 @@ public class SitemapController {
     @RequestMapping(path = "/sitemap.xml", produces = APPLICATION_XML_VALUE)
     public @ResponseBody String get() throws IOException {
 
-        String sitemap = Files.readString(SitemapService.SITEMAP_FULL_FILE.toPath());
+        String sitemap = new String(Files.readAllBytes(SitemapService.SITEMAP_FULL_FILE.toPath()));
         return sitemap;
 
     }

@@ -20,12 +20,12 @@
 		</p>
 
 		<p>
-			<a th:href="'https://jmonkeystore.com/' + ${page.id}" th:text="'https://jmonkeystore.com/' + ${page.id}"></a>
+			<a th:href="${websiteFullUrl}/ + ${page.id}" th:text="${websiteFullUrl}/ + ${page.id}"></a>
 		</p>
 
 		<p>
 			Regards, <br />
-			The JmonkeyStore Team
+			<span th:text="${siteName}"></span>
 		</p>
 	</body>
 </html>

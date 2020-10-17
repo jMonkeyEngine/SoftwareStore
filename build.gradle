@@ -22,8 +22,8 @@ repositories {
 group 'com.jayfella'
 version '1.0.56'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 mainClassName = "com.jayfella.website.Main"
 

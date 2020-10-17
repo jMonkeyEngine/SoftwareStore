@@ -1,5 +1,6 @@
 package com.jayfella.website.controller.http;
 
+import com.jayfella.website.config.external.ServerConfig;
 import com.jayfella.website.core.StoreHtmlFilePaths;
 import com.jayfella.website.core.page.PageState;
 import com.jayfella.website.database.entity.page.stages.LivePage;
@@ -54,8 +55,8 @@ public class IndexPageController {
         // for previews, we need to transfer the preview data.
         model.addAttribute("previewTitle", livePage.getDetails().getTitle());
         model.addAttribute("previewDescription", livePage.getDetails().getShortDescription());
-        model.addAttribute("previewUrl", "https://jmonkeystore.com/" + livePage.getId());
-        model.addAttribute("previewImage", "https://jmonkeystore.com/image/" + previewImageId + ".jpg");
+        model.addAttribute("previewUrl", ServerConfig.getInstance().getFullUrl()+"/" + livePage.getId());
+        model.addAttribute("previewImage", ServerConfig.getInstance().getFullUrl()+"/image/" + previewImageId + ".jpg");
 
         return StoreHtmlFilePaths.Store.VIEW_PAGE.getHtmlFilePath();
     }

@@ -319,7 +319,7 @@ public class ApiValidationController {
 
             String ipAddress = getClientIp(request);
 
-            if (ipAddress.isBlank()) {
+            if (ipAddress==null||ipAddress.trim().isEmpty()) {
                 ipAddress = "UNKNOWN";
             }
 

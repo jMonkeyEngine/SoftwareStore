@@ -14,10 +14,10 @@
 			<b th:text="${page.details.title}"></b>.
 		</p>
 
-		<p>Please visit the <a href="https://jmonkeystore.com/admin/pages/">Store Page Moderation</a> area if you wish to review this page.</p>
+		<p>Please visit the <a   th:href="${websiteFullUrl} + '/admin/pages'" >Store Page Moderation</a> area if you wish to review this page.</p>
 
 		<p>
-			This is an automated message sent by JmonkeyStore.
+			This is an automated message sent by <span th:text="${siteName}"></span>.
 		</p>
 	</body>
 </html>

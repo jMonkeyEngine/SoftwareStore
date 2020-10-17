@@ -58,8 +58,8 @@ public class EmailService {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("JmonkeyStore");
-        message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+        message.setSubject(ServerConfig.getInstance().getSiteName());
+        message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
         message.setTo(user.getEmail());
 
         // Create the HTML body using Thymeleaf
@@ -94,8 +94,8 @@ public class EmailService {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("JmonkeyStore");
-        message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+        message.setSubject(ServerConfig.getInstance().getSiteName());
+        message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
         message.setTo(user.getEmail());
 
         // Create the HTML body using Thymeleaf
@@ -127,8 +127,8 @@ public class EmailService {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("JmonkeyStore");
-        message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+        message.setSubject(ServerConfig.getInstance().getSiteName());
+        message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
         message.setTo(storePage.getOwner().getEmail());
 
         // Create the HTML body using Thymeleaf
@@ -159,8 +159,8 @@ public class EmailService {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("JmonkeyStore");
-        message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+        message.setSubject(ServerConfig.getInstance().getSiteName());
+        message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
         message.setTo(storePage.getOwner().getEmail());
 
         // Create the HTML body using Thymeleaf
@@ -192,8 +192,8 @@ public class EmailService {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("JmonkeyStore");
-        message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+        message.setSubject(ServerConfig.getInstance().getSiteName());
+        message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
         message.setTo(page.getOwner().getEmail());
 
         // Create the HTML body using Thymeleaf
@@ -224,8 +224,8 @@ public class EmailService {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("JmonkeyStore");
-        message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+        message.setSubject(ServerConfig.getInstance().getSiteName());
+        message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
         message.setTo(user.getEmail());
 
         // Create the HTML body using Thymeleaf
@@ -259,8 +259,8 @@ public class EmailService {
                 final MimeMessageHelper message =
                         new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
 
-                message.setSubject("JmonkeyStore - Review Requested");
-                message.setFrom(new InternetAddress("noreply@jmonkeystore.com", "JmonkeyStore"));
+                message.setSubject(ServerConfig.getInstance().getSiteName()+" - Review Requested");
+                message.setFrom(new InternetAddress(ServerConfig.getInstance().getEmail(), ServerConfig.getInstance().getSiteName()));
                 message.setTo(user.getEmail());
 
                 // Create the HTML body using Thymeleaf

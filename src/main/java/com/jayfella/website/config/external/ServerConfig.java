@@ -1,5 +1,6 @@
 package com.jayfella.website.config.external;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jayfella.website.core.JsonMapper;
 import org.slf4j.Logger;
@@ -18,7 +19,17 @@ public class ServerConfig {
     private static ServerConfig INSTANCE;
 
     private int port = 8080;
-    private String siteName = "My Website";
+    private String siteName = "jMonkeyEngine Store";
+    private String siteHostName="store.jmonkeyengine.org";
+    private String siteScheme="https";
+    private String email="noreply@jmonkeyengine.org";
+
+
+    private String smtpUser="";
+    private String smtpPassword="";
+    private int smptPort=587;
+    private String smptHost="";
+
 
     // we use an nginx proxy on the server because it's easier to deal with SSL certificates.
     // this setting only sets the cookie values currently.
@@ -36,16 +47,52 @@ public class ServerConfig {
         return INSTANCE;
     }
 
-    private ServerConfig() {
+    public ServerConfig() {
     }
+
+    @JsonProperty("smtp-user")
+    public String getSmtpUser() { return smtpUser; }
+    public void setSmtpUser(String smtpUser) { this.smtpUser = smtpUser; }
+
+    @JsonProperty("smtp-password")
+    public String getSmtpPassword() { return smtpPassword; }
+    public void setSmtpPassword(String smtpPassword) { this.smtpPassword = smtpPassword; }
+
+    @JsonProperty("smtp-port")
+    public int getSmtpPort() { return smptPort; }
+    public void setSmtpPort(int smptPort) { this.smptPort = smptPort; }
+
+    @JsonProperty("smtp-host")
+    public String getSmtpHost() { return smptHost; }
+    public void setSmtpHost(String smptHost) { this.smptHost = smptHost; }
 
     @JsonProperty("port")
     public int getPort() { return port; }
     public void setPort(int port) { this.port = port; }
 
-    @JsonProperty("site-name")
+    @JsonProperty("site-name")       
     public String getSiteName() { return siteName; }
     public void setSiteName(String siteName) { this.siteName = siteName; }
+
+    @JsonProperty("site-hostname")   
+    public String getSiteHostName() { return siteHostName; }
+    public void setSiteHostName(String siteHostName) { this.siteHostName = siteHostName; }
+
+    @JsonProperty("site-scheme")  
+    public String getSiteScheme() { return siteScheme; }
+    public void setSiteScheme(String siteScheme) { this.siteScheme = siteScheme; }
+
+    @JsonIgnore
+    public String getFullUrl() {
+        return ServerConfig.getInstance().getSiteScheme() + "://" + ServerConfig.getInstance().getSiteHostName();
+    }
+
+
+
+
+    @JsonProperty("email")
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     @JsonProperty("https-enabled")
     public boolean isHttpsEnabled() { return httpsEnabled; }

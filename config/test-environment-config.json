@@ -1,0 +1,29 @@
+{
+    "port" : 8080,
+    "site-name" : "jMonkeyEngine Store",
+    "site-hostname" : "store.jmonkeyengine.org",
+    "site-scheme" : "https",
+    "email" : "noreply@jmonkeyengine.org",
+    "smtp-user" : "",
+    "smtp-password" : "",
+    "https-enabled" : false,
+    "database" : {
+      "type" : "mysql",
+      "address" : "jmestore-testing-mysql ",
+      "port" : 3306,
+      "name" : "jmestore",
+      "username" : "root",
+      "password" : "oEZi1nIeZwpS"
+    },
+    "security" : {
+      "pbkdfIterations" : 80000,
+      "passwordHashLength" : 512,
+      "saltHashLength" : 512
+    },
+    "website" : {
+      "registrationDisabled" : false,
+      "email-enabled" : false
+    },
+    "smtp-port" : 587,
+    "smtp-host" : "smtp.zoho.eu"
+  }

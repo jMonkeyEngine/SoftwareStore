@@ -1,0 +1,16 @@
+www/images/database/*
+!.keep
+.gradle
+gradle
+gradlew
+gradlew.bat
+bin
+build
+.project
+.settings
+.classpath
+test_environment
+dist
+config/server-config.json
+x.*
+deps.txt

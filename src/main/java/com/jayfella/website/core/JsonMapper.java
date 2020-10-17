@@ -44,6 +44,7 @@ public class JsonMapper {
 
     public static boolean writeFile(File file, Object value) {
         try {
+            if(!file.getParentFile().exists()) file.getParentFile().mkdirs();            
             objectMapper.writeValue(file, value);
             return true;
         } catch (IOException ex) {

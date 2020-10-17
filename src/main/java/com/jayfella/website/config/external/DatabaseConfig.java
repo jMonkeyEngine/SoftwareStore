@@ -7,9 +7,9 @@ public class DatabaseConfig {
     private String type = "mysql";
     private String address = "127.0.0.1";
     private int port = 3306;
-    private String name;
-    private String username;
-    private String password;
+    private String name="jmestore";
+    private String username="root";
+    private String password="oEZi1nIeZwpS";
 
     DatabaseConfig() {
     }

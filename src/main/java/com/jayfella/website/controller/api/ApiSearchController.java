@@ -67,9 +67,9 @@ public class ApiSearchController {
         Pageable pageable = PageRequest.of(pageNum, itemsPerPage, Sort.by(sortDir, orderBy));
 
         boolean useCategory = categoryId > 0;
-        boolean useTitle = !title.isBlank();
-        boolean useTag = !tag.isBlank();
-        boolean useAuthor = !author.isBlank();
+        boolean useTitle = !(title==null||title.trim().isEmpty());
+        boolean useTag = !(tag==null||tag.trim().isEmpty());
+        boolean useAuthor = !(author==null||author.trim().isEmpty());
 
         Page<LivePage> page = null;
 

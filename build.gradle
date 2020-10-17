@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 mainClassName = "com.jayfella.website.Main"
 
 project.ext {
-    version_thymeleaf_dialect = "2.4.1"
+    version_thymeleaf_dialect = "2.5.1"
     version_jackson = "2.11.0"
 
     version_mysql_connector = "8.0.20"

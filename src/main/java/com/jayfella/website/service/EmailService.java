@@ -10,6 +10,7 @@ import com.jayfella.website.database.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -24,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
 
-@Service
+@Service @DependsOn("templateEngine") 
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);

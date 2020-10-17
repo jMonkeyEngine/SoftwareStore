@@ -1,7 +1,6 @@
 package com.jayfella.website.config;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
@@ -23,9 +22,7 @@ import com.jayfella.website.config.external.ServerConfig;
 @EnableWebMvc
 public class ThymeLeafConfig implements WebMvcConfigurer {
 
-    @Autowired
-    public SpringTemplateEngine templateEngine;
-
+   
     @Bean
     @Description("Thymeleaf template resolver serving HTML 5")
     public ITemplateResolver templateResolver() {

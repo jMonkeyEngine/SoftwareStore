@@ -54,7 +54,9 @@ public class EmailService {
         // Prepare the evaluation context
         ctx.setVariable("username", user.getUsername());
         ctx.setVariable("validationCode", validation.getId());
-
+        ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+        ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
+        
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         final MimeMessageHelper message =
@@ -85,6 +87,8 @@ public class EmailService {
         ctx.setVariable("username", user.getUsername());
         ctx.setVariable("validationCode", validation.getId());
         ctx.setVariable("changeType", validation.getValidationType().name());
+        ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+        ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
 
         if (validation.getValidationType() == AccountValidationType.Email) {
             ctx.setVariable("newEmail", validation.getValue());
@@ -123,6 +127,8 @@ public class EmailService {
         ctx.setVariable("username", storePage.getOwner().getUsername());
         ctx.setVariable("page", storePage);
         ctx.setVariable("amendment", isAmendment);
+        ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+        ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
 
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -155,6 +161,8 @@ public class EmailService {
         ctx.setVariable("username", storePage.getOwner().getUsername());
         ctx.setVariable("page", storePage);
         ctx.setVariable("amendment", wasAmendment);
+        ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+        ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
 
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -188,6 +196,8 @@ public class EmailService {
         ctx.setVariable("username", page.getOwner().getUsername());
         ctx.setVariable("page", page);
         ctx.setVariable("reason", htmlReason);
+        ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+        ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
 
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -220,6 +230,8 @@ public class EmailService {
         ctx.setVariable("username", user.getUsername());
         ctx.setVariable("validationCode", validationCode);
         ctx.setVariable("ipAddressFrom", ipAddressFrom);
+        ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+        ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
 
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -255,6 +267,8 @@ public class EmailService {
                 ctx.setVariable("username", user.getUsername());
                 ctx.setVariable("page", storePage);
                 ctx.setVariable("pagetype", amendment? "amendment" : "draft");
+                ctx.setVariable("siteName", ServerConfig.getInstance().getSiteName());
+                ctx.setVariable("websiteFullUrl", ServerConfig.getInstance().getFullUrl());
 
                 final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
                 final MimeMessageHelper message =

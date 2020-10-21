@@ -35,7 +35,7 @@ public class ThymeLeafConfig implements WebMvcConfigurer {
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         templateResolver.setOrder(1);
-        
+                
 
         return templateResolver;
     }
@@ -53,10 +53,9 @@ public class ThymeLeafConfig implements WebMvcConfigurer {
 
     @Bean
     @Description("Thymeleaf view resolver")
-    public ViewResolver viewResolver() {
-
+    public ThymeleafViewResolver viewResolver() {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-
+        viewResolver.setOrder(1);
         viewResolver.setTemplateEngine(templateEngine());
         viewResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
         viewResolver.addStaticVariable("siteName", ServerConfig.getInstance().getSiteName());

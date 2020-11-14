@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @Controller
-@RequestMapping(path = "/image/", produces = MediaType.IMAGE_JPEG_VALUE)
+@RequestMapping(path = "/image", produces = MediaType.IMAGE_JPEG_VALUE)
 public class ImageController {
 
     private static final Logger log = LoggerFactory.getLogger(ImageController.class);

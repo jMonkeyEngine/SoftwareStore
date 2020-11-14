@@ -30,7 +30,7 @@ import java.util.List;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping(path = "/api/user/")
+@RequestMapping(path = "/api/user")
 public class ApiUserController {
 
     @Autowired private SessionRepository sessionRepository;

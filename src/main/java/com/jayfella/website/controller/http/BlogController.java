@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "/blog/", produces = MediaType.TEXT_HTML_VALUE)
+@RequestMapping(path = "/blog", produces = MediaType.TEXT_HTML_VALUE)
 public class BlogController {
 
     @GetMapping()

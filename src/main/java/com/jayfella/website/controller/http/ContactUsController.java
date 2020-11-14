@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "/contact/", produces = MediaType.TEXT_HTML_VALUE)
+@RequestMapping(path = "/contact", produces = MediaType.TEXT_HTML_VALUE)
 public class ContactUsController {
 
     @GetMapping

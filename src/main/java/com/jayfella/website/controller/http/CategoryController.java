@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 
 @Controller
-@RequestMapping(path = "/category/", produces = MediaType.TEXT_HTML_VALUE)
+@RequestMapping(path = "/category", produces = MediaType.TEXT_HTML_VALUE)
 public class CategoryController {
 
     @Autowired private CategoryRepository categoryRepository;

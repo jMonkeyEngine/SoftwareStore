@@ -27,7 +27,7 @@ public class ApiAvatarController {
     private UserRepository userRepository;
     @Autowired private ImageService imageService;
 
-    @PostMapping(path = "/system-managed/")
+    @PostMapping(path = "/system-managed")
     public ResponseEntity updateSystemManagedAvatar(ModelMap model,
                                                     @RequestBody ChangeSystemManagedAvatarRequest csmaRequest) throws IOException {
 
@@ -55,7 +55,7 @@ public class ApiAvatarController {
         return updateUserAvatar(user, imageData);
     }
 
-    @PostMapping(path = "/gravatar/")
+    @PostMapping(path = "/gravatar")
     public ResponseEntity updateGravatarAvatar(ModelMap model,
                                                @RequestBody ChangeGravatarAvatarRequest cgaRequest) throws IOException {
 
@@ -69,7 +69,7 @@ public class ApiAvatarController {
         return updateUserAvatar(user, imageData);
     }
 
-    @PostMapping(path = "/custom/")
+    @PostMapping(path = "/custom")
     public ResponseEntity updateCustomAvatar(@RequestParam(value = "avatar") MultipartFile multipartFile,
                                              ModelMap model) throws IOException, InvalidImageException {
 

@@ -50,7 +50,7 @@ public class AdminController {
         return StoreHtmlFilePaths.Admin.INDEX.getHtmlFilePath();
     }
 
-    @GetMapping("/badges/")
+    @GetMapping("/badges")
     public String getBadgesPage(HttpServletResponse response, ModelMap model) throws IOException {
         User user = (User) model.get(ServerAdvice.KEY_USER);
 
@@ -76,7 +76,7 @@ public class AdminController {
         return StoreHtmlFilePaths.Admin.USER.getHtmlFilePath();
     }
 
-    @GetMapping("/users/")
+    @GetMapping("/users")
     public String getUsersPage(HttpServletResponse response, ModelMap model) throws IOException {
         User user = (User) model.get(ServerAdvice.KEY_USER);
 
@@ -88,7 +88,7 @@ public class AdminController {
         return StoreHtmlFilePaths.Admin.USERS.getHtmlFilePath();
     }
 
-    @GetMapping("/pages/")
+    @GetMapping("/pages")
     public String getAssetsPage(ModelMap model, HttpServletResponse response) throws IOException {
 
         User user = (User) model.get(ServerAdvice.KEY_USER);

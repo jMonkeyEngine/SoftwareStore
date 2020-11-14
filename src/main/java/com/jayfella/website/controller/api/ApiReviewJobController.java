@@ -28,7 +28,7 @@ import java.io.UnsupportedEncodingException;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping("/api/approve/job/")
+@RequestMapping("/api/approve/job")
 public class ApiReviewJobController {
 
     @Autowired private PageDraftRepository draftRepository;
@@ -36,7 +36,7 @@ public class ApiReviewJobController {
 
     @Autowired private EmailService emailService;
 
-    @PostMapping("/{pageState}/")
+    @PostMapping("/{pageState}")
     public ResponseEntity<?> takeJob(ModelMap model,
                                      @PathVariable("pageState") String pageState,
                                      @ModelAttribute @Valid SimplePageRequest jobRequest,

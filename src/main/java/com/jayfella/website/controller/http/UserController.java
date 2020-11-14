@@ -64,12 +64,12 @@ public class UserController {
         return StoreHtmlFilePaths.User.INDEX.getHtmlFilePath();
     }
 
-    @GetMapping("/login/")
+    @GetMapping("/login")
     public String getLoginPage() {
         return StoreHtmlFilePaths.User.LOGIN.getHtmlFilePath();
     }
 
-    @PostMapping("/login/")
+    @PostMapping("/login")
     public String postLogin(HttpServletResponse response, Model model,
                             @ModelAttribute @Valid LoginRequest loginRequest,
                             BindingResult result) throws IOException {
@@ -101,7 +101,7 @@ public class UserController {
         return null;
     }
 
-    @PostMapping("/logout/")
+    @PostMapping("/logout")
     public String postLogout(ModelMap model,
                              HttpServletResponse response,
                              @CookieValue(value = KEY_SESSION) String session) throws IOException {
@@ -116,7 +116,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/register/")
+    @GetMapping("/register")
     public String getRegisterPage(HttpServletResponse response) throws IOException {
 
         if (ServerConfig.getInstance().getWebsiteConfig().isRegistrationDisabled()) {
@@ -127,12 +127,12 @@ public class UserController {
         return StoreHtmlFilePaths.User.REGISTER.getHtmlFilePath();
     }
 
-    @GetMapping("/registered/")
+    @GetMapping("/registered")
     public String getRegisteredPage() {
         return StoreHtmlFilePaths.User.REGISTERED.getHtmlFilePath();
     }
 
-    @PostMapping("/register/")
+    @PostMapping("/register")
     public String postRegisterPage(HttpServletResponse response, Model model,
                                    @ModelAttribute @Valid RegisterRequest registerRequest,
                                    BindingResult result) throws IOException {
@@ -180,7 +180,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/my-pages/")
+    @GetMapping("/my-pages")
     public String displayUserAssets(HttpServletResponse response, ModelMap model) throws IOException {
 
         User user = (User) model.get(ServerAdvice.KEY_USER);
@@ -200,7 +200,7 @@ public class UserController {
         return StoreHtmlFilePaths.User.PROFILE.getHtmlFilePath();
     }
 
-    @GetMapping("/reset-password/")
+    @GetMapping("/reset-password")
     public String getResetPassword() {
         return "/user/reset-password.html";
     }

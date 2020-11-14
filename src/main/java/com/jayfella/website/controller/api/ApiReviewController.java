@@ -32,7 +32,7 @@ import static com.jayfella.website.core.ServerAdvice.KEY_USER;
  */
 
 @RestController()
-@RequestMapping("/api/review/")
+@RequestMapping("/api/review")
 public class ApiReviewController {
 
     // @Autowired private OpenSourceAssetRepository openSourceAssetRepository;
@@ -72,7 +72,7 @@ public class ApiReviewController {
                 .body(pageReviews);
     }
 
-    @GetMapping("/user/")
+    @GetMapping("/user")
     public ResponseEntity getUserReviews(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);

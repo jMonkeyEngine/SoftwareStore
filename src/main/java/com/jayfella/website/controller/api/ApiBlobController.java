@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/blob/")
+@RequestMapping("/api/blob")
 public class ApiBlobController {
 
     @Autowired private CategoryRepository categoryRepository;

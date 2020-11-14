@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping("/api/category/")
+@RequestMapping("/api/category")
 public class ApiCategoryController {
 
     @Autowired private CategoryRepository categoryRepository;

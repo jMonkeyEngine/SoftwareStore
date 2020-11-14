@@ -110,7 +110,7 @@ public class ApiMessagesController {
     }
 
     // USER create new reply
-    @PostMapping("/reply/")
+    @PostMapping("/reply")
     public ResponseEntity createReply(ModelMap model,
                                       @ModelAttribute @Valid NewReplyRequest newReplyRequest,
                                       BindingResult bindingResult) {

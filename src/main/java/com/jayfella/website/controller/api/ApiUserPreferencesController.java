@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
-@RequestMapping("/api/user/preferences/")
+@RequestMapping("/api/user/preferences")
 public class ApiUserPreferencesController {
 
     @Autowired private UserRepository userRepository;

@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping("/api/page/")
+@RequestMapping("/api/page")
 public class ApiPageController {
 
     @Autowired private PageDraftRepository draftRepository;
@@ -30,7 +30,7 @@ public class ApiPageController {
 
     @Autowired private UserRepository userRepository;
 
-    @GetMapping("/user/all/")
+    @GetMapping("/user/all")
     public ResponseEntity getAllUserPages(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);

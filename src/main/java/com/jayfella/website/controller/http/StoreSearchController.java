@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/search/")
+@RequestMapping("/search")
 public class StoreSearchController {
 
     @GetMapping
@@ -22,7 +22,7 @@ public class StoreSearchController {
         return "/search/index.html";
     }
 
-    @GetMapping("/{categoryId}/")
+    @GetMapping("/{categoryId}")
     public String getWithCategory(Model model,
                                               @PathVariable("categoryId") int categoryId) {
 

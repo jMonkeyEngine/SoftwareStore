@@ -26,7 +26,7 @@ public class CreatePageController {
      * AUTH: USER
      * Displays the "create potential asset" web page.
      */
-    @GetMapping("/create/")
+    @GetMapping("/create")
     public String createPotentialAsset(HttpServletResponse response, ModelMap model) throws IOException {
 
         User user = (User) model.get(ServerAdvice.KEY_USER);

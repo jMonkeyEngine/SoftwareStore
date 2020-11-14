@@ -26,7 +26,7 @@ import static com.jayfella.website.core.ServerAdvice.KEY_USER;
  * CRUD Repository for Badges
  */
 @RestController
-@RequestMapping("/api/badges/")
+@RequestMapping("/api/badges")
 public class ApiBadgeController {
 
     @Autowired private BadgeRepository badgeRepository;
@@ -131,7 +131,7 @@ public class ApiBadgeController {
                 .body(new SimpleApiResponse("Badge deleted."));
     }
 
-    @PostMapping("/grant/")
+    @PostMapping("/grant")
     public ResponseEntity grantBadge(ModelMap model,
                                      @ModelAttribute @Valid UserBadgeRequest grantRequest,
                                      BindingResult bindingResult) {
@@ -173,7 +173,7 @@ public class ApiBadgeController {
                 .body(badge);
     }
 
-    @PostMapping("/revoke/")
+    @PostMapping("/revoke")
     public ResponseEntity revokeBadge(ModelMap model,
                                       @ModelAttribute @Valid UserBadgeRequest revokeRequest,
                                       BindingResult bindingResult) {

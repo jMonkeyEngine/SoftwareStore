@@ -37,7 +37,7 @@ import static com.jayfella.website.core.ServerAdvice.KEY_USER;
  * An endpoint that returns LIVE asset collections based on various filters.
  */
 @RestController
-@RequestMapping("/api/page/")
+@RequestMapping("/api/page")
 public class ApiLivePageController {
 
     @Autowired private PageDraftRepository draftRepository;
@@ -64,7 +64,7 @@ public class ApiLivePageController {
     }
 
     // ALL returns the top ten highest rated assets.
-    @GetMapping("/highest-rated/")
+    @GetMapping("/highest-rated")
     public Iterable<LivePage> getHighestRated() {
 
         Pageable sortByRating = PageRequest.of(
@@ -149,7 +149,7 @@ public class ApiLivePageController {
 
      */
 
-    @GetMapping("/top/")
+    @GetMapping("/top")
     public ResponseEntity getTopAssets() {
 
         // I'm not sure how to optimize this. I want to choose a random

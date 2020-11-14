@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/legal/")
+@RequestMapping("/legal")
 public class LegalController {
 
-    @GetMapping("/cookies/")
+    @GetMapping("/cookies")
     public String getCookiesPage() {
         return "/legal/cookies.html";
     }
 
-    @GetMapping("/terms/")
+    @GetMapping("/terms")
     public String getTermsOfService() {
         return "/legal/tos.html";
     }
 
-    @GetMapping("/license/opensource/")
+    @GetMapping("/license/opensource")
     public String getOpenSourcLicenseChooser(Model model) {
 
         model.addAttribute("licenses", OpenSourceLicense.values());

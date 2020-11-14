@@ -31,7 +31,7 @@ import java.io.UnsupportedEncodingException;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping("/api/reject/")
+@RequestMapping("/api/reject")
 public class ApiRejectionController {
 
     private static final Logger log = LoggerFactory.getLogger(ApiRejectionController.class);
@@ -45,7 +45,7 @@ public class ApiRejectionController {
     @Autowired private EmailService emailService;
 
     // STAFF reject draft submission
-    @PostMapping("/draft/")
+    @PostMapping("/draft")
     public ResponseEntity rejectDraft(ModelMap model, @ModelAttribute @Valid StaffRejectionRequest rejectRequest, BindingResult bindingResult) {
 
         User user = (User) model.get(KEY_USER);
@@ -84,7 +84,7 @@ public class ApiRejectionController {
         return ApiResponses.pageRejected(draft);
     }
 
-    @PostMapping("/amendment/")
+    @PostMapping("/amendment")
     public ResponseEntity rejectAmendment(ModelMap model, @ModelAttribute @Valid StaffRejectionRequest rejectRequest, BindingResult bindingResult) {
 
         User user = (User) model.get(KEY_USER);

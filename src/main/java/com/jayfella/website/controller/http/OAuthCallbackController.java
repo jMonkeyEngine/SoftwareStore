@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/callback/")
+@RequestMapping("/callback")
 public class OAuthCallbackController {
 
-    @GetMapping("/github/")
+    @GetMapping("/github")
     public void auth() {
 
     }

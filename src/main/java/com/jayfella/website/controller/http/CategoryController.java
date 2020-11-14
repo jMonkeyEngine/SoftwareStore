@@ -16,7 +16,7 @@ public class CategoryController {
 
     @Autowired private CategoryRepository categoryRepository;
 
-    @RequestMapping("/{categoryName}/")
+    @RequestMapping("/{categoryName}")
     public String listCategory(ModelMap model, @PathVariable("categoryName") String categoryName) throws IOException {
         model.put("category", categoryName);
         return "/category/index.html";

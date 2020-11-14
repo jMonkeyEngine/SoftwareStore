@@ -33,7 +33,7 @@ import static com.jayfella.website.core.ServerAdvice.KEY_USER;
  */
 
 @RestController
-@RequestMapping("/api/validate/")
+@RequestMapping("/api/validate")
 public class ApiValidationController {
 
     @Autowired private UserValidationRepository userValidationRepository;
@@ -100,7 +100,7 @@ public class ApiValidationController {
     }
 
     // sends a new email validation email to the user.
-    @PostMapping("/resend/")
+    @PostMapping("/resend")
     public ResponseEntity sendNewEmailValidation(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);
@@ -141,7 +141,7 @@ public class ApiValidationController {
     }
 
     // USER requests a change in their details (email, password).
-    @PostMapping("/details/")
+    @PostMapping("/details")
     public ResponseEntity changeDetails(ModelMap model, @ModelAttribute @Valid ChangeDetailsRequest changeDetailsRequest, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -237,7 +237,7 @@ public class ApiValidationController {
                 .body(new SimpleApiResponse("Please check your email for a validation code."));
     }
 
-    @PostMapping("/cancel/")
+    @PostMapping("/cancel")
     public ResponseEntity cancelValidationRequest(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);

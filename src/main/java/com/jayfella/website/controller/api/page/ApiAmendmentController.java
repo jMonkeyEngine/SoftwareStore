@@ -37,7 +37,7 @@ import static com.jayfella.website.core.ServerAdvice.KEY_USER;
  */
 
 @RestController
-@RequestMapping("/api/page/amendment/")
+@RequestMapping("/api/page/amendment")
 public class ApiAmendmentController {
 
     @Autowired private LivePageRepository livePageRepository;
@@ -169,7 +169,7 @@ public class ApiAmendmentController {
         return ApiResponses.pageDeleted(amendment);
     }
 
-    @GetMapping("/all/")
+    @GetMapping("/all")
     public ResponseEntity getAllAmendments(ModelMap model){
 
         User user = (User) model.get(KEY_USER);
@@ -188,7 +188,7 @@ public class ApiAmendmentController {
                 .body(amendments);
     }
 
-    @GetMapping("/pending/")
+    @GetMapping("/pending")
     public ResponseEntity<?> getPendingDrafts(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);

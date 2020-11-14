@@ -90,7 +90,7 @@ public class ApiUserController {
     }
 
     // allow the user to view their email address.
-    @GetMapping("/email/")
+    @GetMapping("/email")
     public ResponseEntity getMyEmailAddress(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);
@@ -127,7 +127,7 @@ public class ApiUserController {
                 .body(new SimpleApiResponse(searchedUser.getEmail()));
     }
 
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public ResponseEntity createUser(ModelMap model,
                                      @ModelAttribute @Valid AdminCreateUserRequest createUserRequest,
                                      BindingResult bindingResult) throws IOException {
@@ -176,7 +176,7 @@ public class ApiUserController {
                 .body(newUser);
     }
 
-    @PutMapping("/username/")
+    @PutMapping("/username")
     public ResponseEntity updateUsername(ModelMap model, @ModelAttribute @Valid UsernameUpdateRequest updateRequest) {
 
         User user = (User) model.get(KEY_USER);
@@ -195,7 +195,7 @@ public class ApiUserController {
         return new ResponseEntity<>(new SimpleApiResponse("Username updated successfully."), HttpStatus.OK);
     }
 
-    @PutMapping("/name/")
+    @PutMapping("/name")
     public ResponseEntity updateName(ModelMap model, @ModelAttribute @Valid NameUpdateRequest updateRequest) {
 
         User user = (User) model.get(KEY_USER);

@@ -41,7 +41,7 @@ import static com.jayfella.website.core.ServerAdvice.KEY_USER;
  */
 
 @RestController
-@RequestMapping("/api/page/draft/")
+@RequestMapping("/api/page/draft")
 public class ApiDraftController {
 
     @Autowired private PageDraftRepository draftRepository;
@@ -250,7 +250,7 @@ public class ApiDraftController {
         return ApiResponses.pageDeleted(draft);
     }
 
-    @GetMapping("/all/")
+    @GetMapping("/all")
     public ResponseEntity getAllDrafts(ModelMap model){
 
         User user = (User) model.get(KEY_USER);
@@ -267,7 +267,7 @@ public class ApiDraftController {
                 .body(draftRepository.findAll());
     }
 
-    @GetMapping("/pending/")
+    @GetMapping("/pending")
     public ResponseEntity<?> getPendingDrafts(ModelMap model) {
 
         User user = (User) model.get(KEY_USER);

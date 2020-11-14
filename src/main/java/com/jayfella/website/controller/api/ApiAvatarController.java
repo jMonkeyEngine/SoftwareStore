@@ -20,7 +20,7 @@ import java.io.IOException;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping("/api/avatar/")
+@RequestMapping("/api/avatar")
 public class ApiAvatarController {
 
     @Autowired

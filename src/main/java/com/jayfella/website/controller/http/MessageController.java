@@ -15,7 +15,7 @@ import java.io.IOException;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @Controller
-@RequestMapping("/messages/")
+@RequestMapping("/messages")
 public class MessageController {
 
     @Autowired private MessagesRepository messagesRepository;

@@ -24,7 +24,7 @@ import java.io.IOException;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @Controller
-@RequestMapping("/rejections/")
+@RequestMapping("/rejections")
 public class RejectionController {
 
     @Autowired private PageDraftRepository draftRepository;

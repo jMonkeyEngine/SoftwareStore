@@ -36,7 +36,7 @@ import java.util.List;
 import static com.jayfella.website.core.ServerAdvice.KEY_USER;
 
 @RestController
-@RequestMapping("/api/page/approve/")
+@RequestMapping("/api/page/approve")
 public class ApiApprovalController {
 
     @Autowired private PageDraftRepository draftRepository;
@@ -52,7 +52,7 @@ public class ApiApprovalController {
 
     @Autowired private CategoryRepository categoryRepository;
 
-    @PostMapping("/draft/")
+    @PostMapping("/draft")
     public ResponseEntity<?> userRequestDraftReview(ModelMap model, @ModelAttribute @Valid SimplePageRequest approveRequest, BindingResult bindingResult) throws IOException {
 
         User user = (User) model.get(KEY_USER);
@@ -105,7 +105,7 @@ public class ApiApprovalController {
 
     }
 
-    @PostMapping("/draft/accept/")
+    @PostMapping("/draft/accept")
     public ResponseEntity staffApproveDraft(ModelMap model,
                                                 @ModelAttribute @Valid SimplePageRequest approveRequest, BindingResult bindingResult) throws IOException {
 
@@ -179,7 +179,7 @@ public class ApiApprovalController {
         return livePage;
     }
 
-    @PostMapping("/amendment/")
+    @PostMapping("/amendment")
     public ResponseEntity userRequestAmendmentReview(ModelMap model,
                                                      @ModelAttribute @Valid SimplePageRequest approveRequest,
                                                      BindingResult bindingResult) throws IOException {
@@ -233,7 +233,7 @@ public class ApiApprovalController {
         }
     }
 
-    @PostMapping("/amendment/accept/")
+    @PostMapping("/amendment/accept")
     public ResponseEntity staffApproveAmendment(ModelMap model,
                                                 @ModelAttribute @Valid SimplePageRequest approveRequest,
                                                 BindingResult bindingResult) throws IOException {

@@ -150,7 +150,7 @@
 					<tbody>
 						<tr v-for="(amendment, index) in amendments" :class="amendment.reviewState == 'Review_Requested' ? 'positive' : ''">
 							<td>
-								<a :href="'/preview/amendment/opensource/' + amendment.id" target="_blank" data-content="View" data-variation="mini">{{
+								<a :href="'/preview/amendment/' + amendment.id" target="_blank" data-content="View" data-variation="mini">{{
 										amendment.details.title
 									}}</a>
 							</td>

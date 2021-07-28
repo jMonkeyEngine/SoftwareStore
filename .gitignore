@@ -1,6 +1,7 @@
 www/images/database/*
 !.keep
 .gradle
+**/.idea/
 gradle
 gradlew
 gradlew.bat
@@ -14,3 +15,5 @@ dist
 config/server-config.json
 x.*
 deps.txt
+node_modules
+

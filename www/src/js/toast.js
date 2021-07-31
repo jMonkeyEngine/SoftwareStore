@@ -2,7 +2,7 @@ let toastPosition = "bottom left";
 let progressPosition = "bottom";
 let displayTime = 5000;
 
-class toast {
+module.exports = class toast {
 	static defaultAjaxError(xhr, status, error) {
 		let title = "";
 		let message = "";

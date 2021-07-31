@@ -1,4 +1,18 @@
-var app = new Vue({
+import Vue from "vue";
+import MarkdownIt from "markdown-it";
+import MarkdownItAbbr from "markdown-it-abbr";
+import MarkdownItDeflist from "markdown-it-deflist";
+import MarkdownItEmoji from "markdown-it-emoji"; // there is also "markdown-it-emoji/light"
+import MarkdownItFootnote from "markdown-it-footnote";
+import MarkdownItIns from "markdown-it-ins";
+import MarkdownItSub from "markdown-it-sub";
+import MarkdownItSup from "markdown-it-sup";
+import MarkdownItMark from "markdown-it-mark";
+import hljs from "highlight.js";
+import toast from "/src/js/toast.js";
+import 'highlight.js/styles/monokai-sublime.css';
+
+const app = new Vue({
   el: "#app",
 
   data: {
@@ -358,8 +372,7 @@ function mountCarousel() {
 }
 
 function mountMarkdown(content) {
-  let md = window
-    .markdownit({
+  let md = new MarkdownIt({
       linkify: true,
       typographer: true,
       quotes: "“”‘’",
@@ -377,14 +390,14 @@ function mountMarkdown(content) {
         return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + "</code></pre>";
       }
     })
-    .use(window.markdownitAbbr)
-    .use(window.markdownitDeflist)
-    .use(window.markdownitEmoji)
-    .use(window.markdownitFootnote)
-    .use(window.markdownitIns)
-    .use(window.markdownitMark)
-    .use(window.markdownitSub)
-    .use(window.markdownitSup);
+    .use(MarkdownItAbbr)
+    .use(MarkdownItDeflist)
+    .use(MarkdownItEmoji)
+    .use(MarkdownItFootnote)
+    .use(MarkdownItIns)
+    .use(MarkdownItMark)
+    .use(MarkdownItSub)
+    .use(MarkdownItSup);
 
   md.renderer.rules.table_open = function() {
     return '<table class="ui celled table">\n';

@@ -1,4 +1,9 @@
-var app = new Vue({
+import Vue from "vue";
+import { Carousel3d, Slide } from 'vue-carousel-3d';
+import { toast } from "/src/js/toast.js";
+import 'highlight.js/styles/monokai-sublime.css';
+
+const app = new Vue({
 
 	el: '#app',
 
@@ -13,8 +18,8 @@ var app = new Vue({
   },
 
 	components: {
-    'carousel-3d': Carousel3d.Carousel3d,
-    'slide': Carousel3d.Slide
+    'carousel-3d': Carousel3d,
+    'slide': Slide
   },
 
 	 mounted: function() {
@@ -35,9 +40,7 @@ var app = new Vue({
 						app.assets.recently_updated = data.recently_updated;
 
 					},
-					error: function(xhr, status, error) {
-						app.displayToast("Error " + xhr.status + ": " + xhr.responseJSON.message);
-					},
+					error: toast.defaultAjaxError,
 					complete: function(jqXHR, textStatus) {
 						$("#pageLoader").removeClass("active");
 					}

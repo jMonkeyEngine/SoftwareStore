@@ -29,7 +29,7 @@ public class ThymeLeafConfig implements WebMvcConfigurer {
 
         FileTemplateResolver templateResolver = new FileTemplateResolver();
 
-        templateResolver.setPrefix("www/");
+        templateResolver.setPrefix("www/dist/");
         templateResolver.setCacheable(false);
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);

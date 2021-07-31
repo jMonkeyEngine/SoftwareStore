@@ -16,4 +16,5 @@ config/server-config.json
 x.*
 deps.txt
 node_modules
-
+.cache
+.parcel-cache

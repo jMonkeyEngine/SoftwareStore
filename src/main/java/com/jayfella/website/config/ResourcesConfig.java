@@ -8,6 +8,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +19,7 @@ public class ResourcesConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        registry.addResourceHandler(
+        /*registry.addResourceHandler(
                 "/images/**",
                 "/libs/**",
                 "/css/**",
@@ -26,10 +27,21 @@ public class ResourcesConfig implements WebMvcConfigurer {
                 .addResourceLocations(
                         "file:./www/images/",
                         "file:./www/libs/",
-                        "file:./www/css/",
-                        "file:./www/js/"
+                        "file:./www/dist/css/",
+                        "file:./www/dist/",
+                        "file:./www/dist/js/"
                 )
-                .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES));
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES));*/
+
+        registry.addResourceHandler("**").addResourceLocations("file:./www/dist/")
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
+
+        registry.addResourceHandler(".*").addResourceLocations("file:./www/dist/")
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
 
     }
 

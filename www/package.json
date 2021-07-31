@@ -1,0 +1,48 @@
+{
+  "name": "softwarestore-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "parcel": "parcel build [!node_modules]**/*.html *.html layout/layout.html error/*.html",
+    "parcelServe": "parcel serve [!node_modules]**/*.html *.html layout/layout.html error/*.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "blueimp-gallery": "^2.41.0",
+    "fomantic-ui": "^2.8.8",
+    "highlight.js": "^9.15.10",
+    "jquery": "^3.6.0",
+    "markdown-it": "^10.0.0",
+    "markdown-it-abbr": "^1.0.4",
+    "markdown-it-deflist": "^2.0.3",
+    "markdown-it-emoji": "^1.4.0",
+    "markdown-it-footnote": "^3.0.1",
+    "markdown-it-ins": "^2.0.0",
+    "markdown-it-mark": "^2.0.0",
+    "markdown-it-sub": "^1.0.0",
+    "markdown-it-sup": "^1.0.0",
+    "parcel": "^2.0.0-beta.3.1",
+    "vue": "^2.6.11",
+    "vue-carousel-3d": "^1.0.1"
+  },
+  "devDependencies": {
+    "parcel-namer-rewrite": "^2.0.0-beta.1-8"
+  },
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.common.js"
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "parcel-namer-rewrite": {
+    "chain": "@parcel/namer-default",
+    "rules": {
+      "src/css/(.*).css": "css/$1{.hash}.css",
+      "src/js/(.*).js": "css/$1{.hash}.js",
+      "src/js/test.js": "js/test{hash}.js"
+    }
+  }
+}

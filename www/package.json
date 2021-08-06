@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "parcel": "parcel build [!node_modules]**/*.html *.html layout/layout.html error/*.html",
+    "parcel": "parcel build --log-level verbose \"[!node_modules]**/*.html\" \"*.html\" \"layout/layout.html\" \"error/*.html\"",
     "parcelServe": "parcel serve [!node_modules]**/*.html *.html layout/layout.html error/*.html"
   },
   "author": "",
@@ -15,6 +15,7 @@
     "fomantic-ui": "^2.8.8",
     "highlight.js": "^9.15.10",
     "jquery": "^3.6.0",
+    "jquery-ui": "^1.12.1",
     "markdown-it": "^10.0.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-deflist": "^2.0.3",
@@ -40,9 +41,16 @@
   "parcel-namer-rewrite": {
     "chain": "@parcel/namer-default",
     "rules": {
-      "src/css/(.*).css": "css/$1{.hash}.css",
-      "src/js/(.*).js": "css/$1{.hash}.js",
-      "src/js/test.js": "js/test{hash}.js"
+      "(.*).js": "static/js/$1.js",
+      "(.*).css": "static/css/$1.css",
+      "(.*).png": "static/images/$1.png",
+      "(.*).gif": "static/images/$1.gif",
+      "(.*).ico": "static/images/$1.ico",
+      "(.*).svg": "static/images/$1.svg",
+      "(.*).ttf": "static/fonts/$1.ttf",
+      "(.*).eot": "static/fonts/$1.eot",
+      "(.*).woff": "static/fonts/$1.woff",
+      "(.*).woff2": "static/fonts/$1.woff2"
     }
   }
 }

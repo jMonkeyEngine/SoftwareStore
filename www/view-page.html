@@ -4,12 +4,11 @@
 <head>
 	<title>View Page</title>
 
-	<link rel="stylesheet" href="/libs/blueimp-gallery/2.33.0/css/blueimp-gallery.min.css" />
+    <link rel="stylesheet" href="/node_modules/blueimp-gallery/css/blueimp-gallery.css" />
 	<!-- <link rel="stylesheet" href="url(/libs/highlightjs/9.15.10/styles/monokai-sublime.css" /> -->
 	<link rel="stylesheet" href="/src/css/view-page.css" />
 
-	<script src="./libs/blueimp-gallery/2.41.0/js/blueimp-gallery.min.js"></script>
-
+    <script src="/node_modules/blueimp-gallery/js/blueimp-gallery.js"></script>
     <script src="/src/js/view-page.js" defer></script>
 
 	<meta th:if="${preview != null && preview == false}" property="og:title" th:content="${previewTitle}">

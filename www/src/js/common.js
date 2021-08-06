@@ -1,3 +1,5 @@
+$ = require('jquery');
+
 $("#sideMenuButton, #closeSideMenuButton").click(function() {
 	$(".ui.sidebar")
 		.sidebar("setting", "transition", "overlay")

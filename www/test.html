@@ -2,13 +2,22 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 	<head>
 		<title>View Page</title>
-        <link rel="stylesheet" href="./libs/semantic/dist/semantic.css" />
+        <script>
+            $ = require("jquery");
+            jQuery = $;
+            require("jquery-ui");
+            require("blueimp-gallery"); // CSS?
+        </script>
+        <script src="/libs/semantic/dist/semantic.min.js"></script>
+        <script src="/src/js/test.js" defer></script>
+        <script src="/src/js/view-page.js" defer></script>
+
+        <!-- <link rel="stylesheet" href="./libs/semantic/dist/semantic.css" /> -->
         <link rel="stylesheet" href="/node_modules/blueimp-gallery/css/blueimp-gallery.css" />
         <link rel="stylesheet" href="/src/css/view-page.css" />
 
-        <script src="/node_modules/blueimp-gallery/js/blueimp-gallery.js"></script>
-        <script src="/src/js/test.js" defer></script>
-        <script src="/src/js/view-page.js" defer></script>
+        <!-- <script src="/node_modules/blueimp-gallery/js/blueimp-gallery.js"></script> -->
+
 
 		<meta th:if="${preview != null && preview == false}" property="og:title" th:content="${previewTitle}">
 		<meta th:if="${preview != null && preview == false}" property="og:description" th:content="${previewDescription}">

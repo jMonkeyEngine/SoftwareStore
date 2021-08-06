@@ -3,10 +3,16 @@
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 	<title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" th:text="${pageTitle}"></title>
 
 	<link rel="shortcut icon" type="image/icon" href="../favicon.ico" />
+
+    <link rel="stylesheet" type="text/css" href="/src/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../libs/semantic/dist/semantic.min.css" />
+
+    <script>
+        $ = require( "jquery" );
+    </script>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-143545224-1"></script>
@@ -20,12 +26,9 @@
 
 		gtag("config", "UA-143545224-1");
 	</script>
+    <!-- <script src="../libs/semantic/dist/semantic.min.js"></script> -->
+    <script src="../libs/moment/2.24.0/moment.min.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="/src/css/style.css" />
-	<link rel="stylesheet" type="text/css" href="../libs/semantic/dist/semantic.min.css" />
-
-	<script src="../libs/semantic/dist/semantic.min.js"></script>
-	<script src="../libs/moment/2.24.0/moment.min.js"></script>
 
 	<script src="/src/js/page-api.js"></script>
 

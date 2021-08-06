@@ -33,7 +33,7 @@ public class ResourcesConfig implements WebMvcConfigurer {
                 )
                 .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES));*/
 
-        registry.addResourceHandler("**").addResourceLocations("file:./www/dist/")
+        /*registry.addResourceHandler("**").addResourceLocations("file:./www/dist/")
                 .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
@@ -41,7 +41,9 @@ public class ResourcesConfig implements WebMvcConfigurer {
         registry.addResourceHandler(".*").addResourceLocations("file:./www/dist/")
                 .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES))
                 .resourceChain(true)
-                .addResolver(new PathResourceResolver());
+                .addResolver(new PathResourceResolver());*/
+        registry.addResourceHandler("/static/**").addResourceLocations("file:./www/dist/static/")
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.MINUTES));
 
     }
 
